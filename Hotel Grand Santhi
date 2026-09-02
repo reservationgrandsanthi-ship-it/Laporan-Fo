@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Grand Santhi Management & Comset Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --brand-dark: #0A0D14;
+            --brand-gold: #D4AF37;
+            --brand-green: #114B3E;
+            --brand-blue: #1A365D;
+        }
+        .bg-brand-dark { background-color: var(--brand-dark); }
+        .text-brand-gold { color: var(--brand-gold); }
+        .bg-brand-gold { background-color: var(--brand-gold); }
+        .border-brand-gold { border-color: var(--brand-gold); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0A0D14; }
+        ::-webkit-scrollbar-thumb { background: #1F2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+    </style>
+</head>
+<body class="h-full bg-slate-950 text-slate-100 font-sans antialiased flex flex-col md:flex-row overflow-hidden">
+
+    <div class="md:hidden bg-[#070A0F] border-b border-[#151D2A] px-4 py-3 flex items-center justify-between z-30 shrink-0">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleMobileSidebar()" class="w-10 h-10 rounded-xl bg-[#0A0D14] border border-[#233044] text-[#D4AF37] flex items-center justify-center text-lg active:scale-95 transition">
+                <i class="fa-solid fa-bars" id="mobileMenuIcon"></i>
+            </button>
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-lg bg-[#0A0D14] border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] text-sm font-bold">
+                    <i class="fa-solid fa-hotel"></i>
+                </div>
+                <h1 id="mobileHeaderTitle" class="font-bold text-white text-sm truncate max-w-[180px]">Hotel Grand Santhi</h1>
+            </div>
+        </div>
+        <div id="mobileSyncIndicator" class="hidden px-2.5 py-1 bg-emerald-950/60 border border-emerald-900/50 text-emerald-400 text-[10px] font-semibold rounded-lg flex items-center space-x-1">
+            <i class="fa-solid fa-cloud-arrow-down animate-bounce"></i>
+            <span>Sync</span>
+        </div>
+    </div>
+
+    <div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-30 hidden md:hidden transition-opacity"></div>
+
+    <aside id="appSidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-[#070A0F] text-slate-300 flex flex-col justify-between shrink-0 shadow-2xl z-40 border-r border-[#151D2A] transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div>
+            <div class="p-6 border-b border-[#151D2A] flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div id="sidebarLogoContainer" class="w-12 h-12 rounded-xl bg-[#0A0D14] border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] font-bold text-xl overflow-hidden shadow-lg">
+                        <i class="fa-solid fa-hotel"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <h1 id="sidebarHotelName" class="font-bold text-white text-base tracking-wide truncate">Hotel Grand Santhi</h1>
+                        <p class="text-xs text-[#D4AF37]">Management System</p>
+                    </div>
+                </div>
+                <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-400 hover:text-white text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <nav class="p-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-180px)]">
+                <button onclick="switchTab('dashboard'); toggleMobileSidebarIfNeeded();" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-[#114B3E] text-white shadow-md shadow-[#114B3E]/30 border border-[#D4AF37]/30" data-target="dashboard">
+                    <i class="fa-solid fa-chart-pie w-5 text-[#D4AF37]"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="switchTab('database'); toggleMobileSidebarIfNeeded();" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-900 text-slate-300" data-target="database">
+                    <i class="fa-solid fa-address-book w-5 text-[#D4AF37]"></i>
+                    <span>Database Tamu</span>
+                </button>
+                <button onclick="switchTab('comset'); toggleMobileSidebarIfNeeded();" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-900 text-slate-300" data-target="comset">
+                    <i class="fa-solid fa-chart-line w-5 text-[#D4AF37]"></i>
+                    <span>Comset & Revenue</span>
+                </button>
+                <button onclick="switchTab('extend'); toggleMobileSidebarIfNeeded();" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-900 text-slate-300" data-target="extend">
+                    <i class="fa-solid fa-clock-rotate-left w-5 text-[#D4AF37]"></i>
+                    <span>Extend by Direct</span>
+                </button>
+                <button onclick="switchTab('repeater'); toggleMobileSidebarIfNeeded();" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-900 text-slate-300" data-target="repeater">
+                    <i class="fa-solid fa-users-rectangle w-5 text-[#D4AF37]"></i>
+                    <span>Repeater Guest</span>
+                </button>
+                <button onclick="switchTab('upselling'); toggleMobileSidebarIfNeeded();" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-900 text-slate-300" data-target="upselling">
+                    <i class="fa-solid fa-ranking-star w-5 text-[#D4AF37]"></i>
+                    <span>Upselling & Cross-selling</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="p-4 border-t border-[#151D2A]">
+            <button onclick="switchTab('settings'); toggleMobileSidebarIfNeeded();" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-900 text-slate-300" data-target="settings">
+                <i class="fa-solid fa-gear w-5 text-[#D4AF37]"></i>
+                <span>Pengaturan Hotel</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto bg-[#0B0F17]">
+        <header class="bg-[#0E1420] border-b border-[#182234] px-6 py-4 hidden md:flex justify-between items-center sticky top-0 z-10 shadow-sm">
+            <div class="flex items-center space-x-4">
+                <span id="pageTitle" class="text-xl font-bold text-white tracking-wide">Dashboard Eksekutif</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div id="syncStatusBadge" class="hidden items-center space-x-1.5 px-3 py-1 rounded-xl bg-emerald-950/60 border border-emerald-900/50 text-emerald-400 text-xs font-semibold">
+                    <i class="fa-solid fa-cloud-arrow-down animate-bounce"></i>
+                    <span id="syncText">Google Sheets Sync Aktif</span>
+                </div>
+                <div class="bg-[#151D2A] border border-[#233044] text-[#D4AF37] px-3.5 py-1.5 rounded-xl text-sm font-medium flex items-center space-x-2">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span id="headerHotelDisplay">Hotel Grand Santhi</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6">
+
+            <!-- TAB 1: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-content space-y-6">
+                <div class="bg-[#0E1420] p-4 rounded-2xl shadow-sm border border-[#182234] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-filter text-[#D4AF37]"></i>
+                        <span class="font-semibold text-slate-200 text-sm">Mode Periode Data:</span>
+                        <div class="inline-flex bg-[#151D2A] p-1 rounded-xl border border-[#233044]">
+                            <button id="btnModeMtd" onclick="setFilterMode('mtd')" class="px-3 py-1 rounded-lg text-xs font-bold transition bg-[#114B3E] text-[#D4AF37]">MTD</button>
+                            <button id="btnModeYtd" onclick="setFilterMode('ytd')" class="px-3 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">YTD</button>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                        <div id="containerMtd" class="flex-1 sm:flex-initial">
+                            <select id="filterMonth" onchange="renderDashboard()" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 text-sm rounded-xl px-3 py-2 focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                                <option value="0">Januari</option>
+                                <option value="1">Februari</option>
+                                <option value="2">Maret</option>
+                                <option value="3" selected>April</option>
+                                <option value="4">Mei</option>
+                                <option value="5">Juni</option>
+                                <option value="6">Juli</option>
+                                <option value="7">Agustus</option>
+                                <option value="8">September</option>
+                                <option value="9">Oktober</option>
+                                <option value="10">November</option>
+                                <option value="11">Desember</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 sm:flex-initial">
+                            <select id="filterYear" onchange="renderDashboard()" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 text-sm rounded-xl px-3 py-2 focus:ring-2 focus:ring-[#D4AF37] outline-none">
+                                <option value="2025">2025</option>
+                                <option value="2026" selected>2026</option>
+                                <option value="2027">2027</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Revenue Hotel (Room)</p>
+                            <h3 id="dashHotelRevenue" class="text-xl sm:text-2xl font-bold text-white mt-1">Rp 0</h3>
+                            <span class="text-[11px] sm:text-xs text-emerald-400 font-medium mt-1 inline-block"><i class="fa-solid fa-arrow-trend-up"></i> Akumulasi Comset Utama</span>
+                        </div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-950/40 text-emerald-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl border border-emerald-900/50 shrink-0">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Rata-rata Occupancy</p>
+                            <h3 id="dashOcc" class="text-xl sm:text-2xl font-bold text-white mt-1">0%</h3>
+                            <span class="text-[11px] sm:text-xs text-[#D4AF37] font-medium mt-1 inline-block"><i class="fa-solid fa-chart-pie"></i> Akumulasi Comset Utama</span>
+                        </div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-[#1A365D]/30 text-blue-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl border border-[#1A365D] shrink-0">
+                            <i class="fa-solid fa-percent"></i>
+                        </div>
+                    </div>
+                    <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm flex items-center justify-between sm:col-span-2 lg:col-span-1">
+                        <div>
+                            <p class="text-[11px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Revenue Upselling</p>
+                            <h3 id="dashUpsellRevenue" class="text-xl sm:text-2xl font-bold text-[#D4AF37] mt-1">Rp 0</h3>
+                            <span class="text-[11px] sm:text-xs text-amber-400 font-medium mt-1 inline-block"><i class="fa-solid fa-ranking-star"></i> Total Layanan Tambahan</span>
+                        </div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-amber-950/40 text-amber-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl border border-amber-900/50 shrink-0">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm lg:col-span-1 flex flex-col">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-white text-base">Asal Tamu (Kota & Provinsi)</h3>
+                            <span class="text-xs bg-[#151D2A] text-[#D4AF37] px-2.5 py-1 rounded-md border border-[#233044]">Urut Terbesar</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4">Klik salah satu baris untuk melihat detail tamu dari wilayah tersebut.</p>
+                        <div id="dashLocationList" class="space-y-3 overflow-y-auto max-h-[350px] pr-1"></div>
+                    </div>
+
+                    <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm lg:col-span-2 flex flex-col">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-white text-base">Ringkasan Performa Komset vs Hotel Utama</h3>
+                            <span class="text-xs bg-[#114B3E]/40 text-[#D4AF37] font-semibold px-2.5 py-1 rounded-md border border-[#114B3E]">Analisis Pasar</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm min-w-[550px]">
+                                <thead>
+                                    <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                        <th class="p-3 font-semibold">Nama Hotel</th>
+                                        <th class="p-3 font-semibold text-center">Room Sold</th>
+                                        <th class="p-3 font-semibold text-right">ARR (Rp)</th>
+                                        <th class="p-3 font-semibold text-center">Occ (%)</th>
+                                        <th class="p-3 font-semibold text-right">Revenue (Rp)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashComsetTableBody" class="divide-y divide-[#182234]"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cityDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+                    <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+                        <div class="flex justify-between items-center border-b border-[#182234] pb-3">
+                            <h3 id="modalCityTitle" class="text-lg font-bold text-white">Detail Tamu</h3>
+                            <button onclick="closeCityModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm min-w-[480px]">
+                                <thead>
+                                    <tr class="bg-[#151D2A] text-slate-300">
+                                        <th class="p-2">Nama Tamu</th>
+                                        <th class="p-2">Check-in</th>
+                                        <th class="p-2">Kota / Prov</th>
+                                        <th class="p-2 text-center">WhatsApp (Direct WA)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modalCityGuests" class="divide-y divide-[#182234]"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="upsellChartModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+                    <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-3xl w-full p-6 shadow-2xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-[#182234] pb-3">
+                            <h3 class="text-lg font-bold text-white">Grafik Perbandingan Upselling (YoY)</h3>
+                            <button onclick="closeUpsellModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div class="relative h-64 sm:h-72 w-full">
+                            <canvas id="upsellComparisonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: DATABASE TAMU & BLAST WA -->
+            <section id="tab-database" class="tab-content hidden space-y-6">
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Database Tamu & WhatsApp Blast</h2>
+                            <p class="text-xs text-slate-400">Kelola informasi tamu dan kirimkan pesan broadcast WhatsApp interaktif.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                            <button onclick="openAddGuestModal()" class="flex-1 sm:flex-initial bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Tamu</button>
+                            <button onclick="openBlastModal()" class="flex-1 sm:flex-initial bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm"><i class="fa-brands fa-whatsapp mr-2"></i>Blast WhatsApp</button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse min-w-[650px]">
+                            <thead>
+                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                    <th class="p-3 font-semibold">Nama Tamu</th>
+                                    <th class="p-3 font-semibold">Tanggal Check-in</th>
+                                    <th class="p-3 font-semibold">Kota</th>
+                                    <th class="p-3 font-semibold">Provinsi</th>
+                                    <th class="p-3 font-semibold">No. WhatsApp</th>
+                                    <th class="p-3 font-semibold text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="guestTableBody" class="divide-y divide-[#182234]"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="blastModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+                    <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-[#182234] pb-3">
+                            <h3 class="text-lg font-bold text-white">Kirim WhatsApp Blast</h3>
+                            <button onclick="closeBlastModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Pilih Target Penerima</label>
+                                <select id="blastTarget" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                    <option value="all">Semua Tamu dalam Database</option>
+                                    <option value="repeater">Repeater Guest Saja</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Template Pesan (Edit Teks Bebas)</label>
+                                <textarea id="blastMessage" rows="5" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-[#D4AF37]">Halo [NamaTamu], terima kasih telah mempercayakan akomodasi Anda di [NamaHotel]. Kami menantikan kepulangan Anda kembali ke [KotaHotel]! Dapatkan diskon khusus 15% untuk pemesanan langsung berikutnya.</textarea>
+                                <p class="text-xs text-slate-400 mt-1">Variabel tersedia: <code class="text-[#D4AF37]">[NamaTamu]</code>, <code class="text-[#D4AF37]">[NamaHotel]</code></p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-3 pt-2">
+                            <button onclick="closeBlastModal()" class="px-4 py-2 border border-[#233044] rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900">Batal</button>
+                            <button onclick="executeBlastWhatsApp()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-sm font-medium shadow-sm"><i class="fa-brands fa-whatsapp mr-2"></i>Kirim Sekarang</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="guestModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+                    <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-[#182234] pb-3">
+                            <h3 id="guestModalTitle" class="text-lg font-bold text-white">Tambah Tamu Baru</h3>
+                            <button onclick="closeGuestModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <input type="hidden" id="guestIndexId" value="">
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Tamu</label>
+                                <input type="text" id="inputGuestName" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Tanggal Check-in</label>
+                                <input type="date" id="inputGuestDate" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Kota</label>
+                                    <input type="text" id="inputGuestCity" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Provinsi</label>
+                                    <input type="text" id="inputGuestProv" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">No. WhatsApp</label>
+                                <input type="text" id="inputGuestPhone" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" placeholder="08xxxxxxxxxx">
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-3 pt-2">
+                            <button onclick="closeGuestModal()" class="px-4 py-2 border border-[#233044] rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900">Batal</button>
+                            <button onclick="saveGuestData()" class="px-4 py-2 bg-[#114B3E] hover:bg-[#155C4E] text-white rounded-xl text-sm font-medium shadow-sm border border-[#D4AF37]/30">Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: DATA COMSET & REVENUE -->
+            <section id="tab-comset" class="tab-content hidden space-y-6">
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Data Competitor Set & Revenue Performance</h2>
+                            <p class="text-xs text-slate-400">Monitor metrik pasar komparatif (MPI, RGI, ARI, Revenue, Market Share).</p>
+                        </div>
+                        <button onclick="openComsetModel()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Data Comset</button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse min-w-[850px]">
+                            <thead>
+                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                    <th class="p-2.5 font-semibold">Tanggal Data</th>
+                                    <th class="p-2.5 font-semibold">Hotel Utama / Komset</th>
+                                    <th class="p-2.5 font-semibold text-center">Room Avail</th>
+                                    <th class="p-2.5 font-semibold text-center">Room Sold</th>
+                                    <th class="p-2.5 font-semibold text-center">Occ (%)</th>
+                                    <th class="p-2.5 font-semibold text-right">ARR (Rp)</th>
+                                    <th class="p-2.5 font-semibold text-right">Revenue (Rp)</th>
+                                    <th class="p-2.5 font-semibold text-center">Mkt Share</th>
+                                    <th class="p-2.5 font-semibold text-center">RevPAR</th>
+                                    <th class="p-2.5 font-semibold text-center">MPI/RGI/ARI</th>
+                                    <th class="p-2.5 font-semibold text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comgetTableFullBody" class="divide-y divide-[#182234]"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="comsetModel" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+                    <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+                        <div class="flex justify-between items-center border-b border-[#182234] pb-3">
+                            <h3 id="comsetTitleModal" class="text-lg font-bold text-white">Kelola Data Komset</h3>
+                            <button onclick="closeComsetModel()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <input type="hidden" id="comsetIndexId" value="">
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Tanggal Data</label>
+                                <input type="date" id="inputComsetDate" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Hotel</label>
+                                <input type="text" id="inputComsetName" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" placeholder="Hotel Grand Santhi (Utama)">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Room Available</label>
+                                    <input type="number" id="inputComsetAvail" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Room Sold</label>
+                                    <input type="number" id="inputComsetSold" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">ARR (Average Room Rate)</label>
+                                <input type="number" id="inputComsetArr" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" placeholder="Contoh: 750000">
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-3 pt-2">
+                            <button onclick="closeComsetModel()" class="px-4 py-2 border border-[#233044] rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900">Batal</button>
+                            <button onclick="saveComsetData()" class="px-4 py-2 bg-[#114B3E] hover:bg-[#155C4E] text-white rounded-xl text-sm font-medium shadow-sm border border-[#D4AF37]/30">Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: EXTEND BY DIRECT -->
+            <section id="tab-extend" class="tab-content hidden space-y-6">
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Data Extend by Direct Booking</h2>
+                            <p class="text-xs text-slate-400">Daftar tamu yang memperpanjang masa menginap langsung melalui hotel.</p>
+                        </div>
+                        <button onclick="openExtendModal()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Data Extend</button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse min-w-[700px]">
+                            <thead>
+                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                    <th class="p-3 font-semibold">Nama Tamu</th>
+                                    <th class="p-3 font-semibold">No. Kamar</th>
+                                    <th class="p-3 font-semibold text-center">Jumlah Malam Ekstensi</th>
+                                    <th class="p-3 font-semibold">Tanggal Extend</th>
+                                    <th class="p-3 font-semibold text-right">Total Tambahan Revenue (Rp)</th>
+                                    <th class="p-3 font-semibold text-center">WhatsApp (Direct WA)</th>
+                                    <th class="p-3 font-semibold text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="extendTableBody" class="divide-y divide-[#182234]"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="extendModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+                    <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-[#182234] pb-3">
+                            <h3 id="extendModalTitle" class="text-lg font-bold text-white">Kelola Extend by Direct</h3>
+                            <button onclick="closeExtendModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <input type="hidden" id="extendIndexId" value="">
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Tamu</label>
+                                <input type="text" id="inputExtName" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">No. Kamar</label>
+                                    <input type="text" id="inputExtRoom" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Jumlah Malam</label>
+                                    <input type="number" id="inputExtNights" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" value="1">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Tanggal Extend</label>
+                                    <input type="date" id="inputExtDate" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Total Biaya (Rp)</label>
+                                    <input type="number" id="inputExtRevenue" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">No. WhatsApp</label>
+                                <input type="text" id="inputExtPhone" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" placeholder="08xxxxxxxxxx">
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-3 pt-2">
+                            <button onclick="closeExtendModal()" class="px-4 py-2 border border-[#233044] rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900">Batal</button>
+                            <button onclick="saveExtendData()" class="px-4 py-2 bg-[#114B3E] hover:bg-[#155C4E] text-white rounded-xl text-sm font-medium shadow-sm border border-[#D4AF37]/30">Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: REPEATER GUEST -->
+            <section id="tab-repeater" class="tab-content hidden space-y-6">
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Data Repeater Guest (Tamu Berulang)</h2>
+                            <p class="text-xs text-slate-400">Daftar tamu setia yang telah menginap lebih dari satu kali.</p>
+                        </div>
+                        <button onclick="openRepeaterModal()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Repeater Guest</button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse min-w-[650px]">
+                            <thead>
+                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                    <th class="p-3 font-semibold">Nama Tamu</th>
+                                    <th class="p-3 font-semibold text-center">Total Kunjungan (Stay Count)</th>
+                                    <th class="p-3 font-semibold">Kunjungan Terakhir</th>
+                                    <th class="p-3 font-semibold text-center">WhatsApp (Direct WA)</th>
+                                    <th class="p-3 font-semibold text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="repeaterTableBody" class="divide-y divide-[#182234]"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="repeaterModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+                    <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-[#182234] pb-3">
+                            <h3 id="repeaterModalTitle" class="text-lg font-bold text-white">Kelola Repeater Guest</h3>
+                            <button onclick="closeRepeaterModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <input type="hidden" id="repeaterIndexId" value="">
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Tamu</label>
+                                <input type="text" id="inputRepName" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Total Kunjungan</label>
+                                    <input type="number" id="inputRepStays" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" value="2">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Kunjungan Terakhir</label>
+                                    <input type="date" id="inputRepDate" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">No. WhatsApp</label>
+                                <input type="text" id="inputRepPhone" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" placeholder="08xxxxxxxxxx">
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-3 pt-2">
+                            <button onclick="closeRepeaterModal()" class="px-4 py-2 border border-[#233044] rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900">Batal</button>
+                            <button onclick="saveRepeateradata()" class="px-4 py-2 bg-[#114B3E] hover:bg-[#155C4E] text-white rounded-xl text-sm font-medium shadow-sm border border-[#D4AF37]/30">Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: UPSELLING & CROSS-SELLING -->
+            <section id="tab-upselling" class="tab-content hidden space-y-6">
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Data Upselling & Cross-Selling</h2>
+                            <p class="text-xs text-slate-400">Monitor layanan tambahan dengan filter MTD / YTD.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <div class="inline-flex bg-[#151D2A] p-1 rounded-xl border border-[#233044]">
+                                <button id="btnUpsellMtd" onclick="setUpsellFilterMode('mtd')" class="px-3 py-1 rounded-lg text-xs font-bold transition bg-[#114B3E] text-[#D4AF37]">MTD</button>
+                                <button id="btnUpsellYtd" onclick="setUpsellFilterMode('ytd')" class="px-3 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">YTD</button>
+                            </div>
+                            <select id="upsellFilterMonth" onchange="renderUpsellTable()" class="bg-[#151D2A] border border-[#233044] text-slate-200 text-xs rounded-xl px-2.5 py-2 outline-none">
+                                <option value="0">Jan</option>
+                                <option value="1">Feb</option>
+                                <option value="2">Mar</option>
+                                <option value="3" selected>Apr</option>
+                                <option value="4">Mei</option>
+                                <option value="5">Jun</option>
+                                <option value="6">Jul</option>
+                                <option value="7">Ags</option>
+                                <option value="8">Sep</option>
+                                <option value="9">Okt</option>
+                                <option value="10">Nov</option>
+                                <option value="11">Des</option>
+                            </select>
+                            <select id="upsellFilterYear" onchange="renderUpsellTable()" class="bg-[#151D2A] border border-[#233044] text-slate-200 text-xs rounded-xl px-2.5 py-2 outline-none">
+                                <option value="2025">2025</option>
+                                <option value="2026" selected>2026</option>
+                                <option value="2027">2027</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <p class="text-xs text-slate-400">Klik tombol "Tamu" pada baris layanan untuk melihat daftar transaksi dan melakukan edit atau chat WhatsApp.</p>
+                        <div class="flex items-center space-x-2 w-full sm:w-auto">
+                            <button onclick="openUpsellChartModal()" class="flex-1 sm:flex-initial bg-[#1A365D] hover:bg-[#224479] text-white px-3.5 py-2 rounded-xl text-xs font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-chart-bar mr-1.5"></i>Grafik YoY</button>
+                            <button onclick="openUpsellModal()" class="flex-1 sm:flex-initial bg-[#114B3E] hover:bg-[#155C4E] text-white px-3.5 py-2 rounded-xl text-xs font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-1.5"></i>Tambah Transaksi</button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse min-w-[600px]">
+                            <thead>
+                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                    <th class="p-3 font-semibold">Jenis Layanan</th>
+                                    <th class="p-3 font-semibold text-center">Total Qty Terjual</th>
+                                    <th class="p-3 font-semibold text-right">Total Revenue (Rp)</th>
+                                    <th class="p-3 font-semibold text-center">Detail Tamu</th>
+                                    <th class="p-3 font-semibold text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="upsellTableBody" class="divide-y divide-[#182234]"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="upsellDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+                    <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-[#182234] pb-3">
+                            <h3 id="modalUpsellTitle" class="text-lg font-bold text-white">Daftar Tamu Layanan</h3>
+                            <button onclick="closeUpsellDetailModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div class="overflow-x-auto max-h-[300px]">
+                            <table class="w-full text-left text-sm min-w-[450px]">
+                                <thead>
+                                    <tr class="bg-[#151D2A] text-slate-300">
+                                        <th class="p-2">Nama Tamu & WhatsApp</th>
+                                        <th class="p-2">Tanggal Transaksi</th>
+                                        <th class="p-2 text-center">Qty</th>
+                                        <th class="p-2 text-right">Revenue (Rp)</th>
+                                        <th class="p-2 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modalUpsellGuestsBody" class="divide-y divide-[#182234]"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="upsellModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+                    <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-[#182234] pb-3">
+                            <h3 id="upsellModalTitle" class="text-lg font-bold text-white">Tambah Transaksi Upselling</h3>
+                            <button onclick="closeUpsellEditModal()" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <input type="hidden" id="upsellIndexId" value="">
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Tanggal Transaksi</label>
+                                <input type="date" id="inputUpsellDate" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Tamu</label>
+                                <input type="text" id="inputUpsellGuest" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" placeholder="Nama Tamu">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">No. WhatsApp Tamu</label>
+                                <input type="text" id="inputUpsellPhone" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" placeholder="08xxxxxxxxxx">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Jenis Layanan</label>
+                                <select id="inputUpsellService" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none">
+                                    <option value="Upgrade Room">Upgrade Room</option>
+                                    <option value="Early Check-in">Early Check-in</option>
+                                    <option value="Late Check-Out">Late Check-Out</option>
+                                    <option value="Extra Bed">Extra Bed</option>
+                                    <option value="Massage">Massage</option>
+                                    <option value="Laundry">Laundry</option>
+                                    <option value="Transport">Transport</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Kuantitas (Qty)</label>
+                                    <input type="number" id="inputUpsellQty" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" value="1">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-300 mb-1">Total Revenue (Rp)</label>
+                                    <input type="number" id="inputUpsellRev" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2 text-sm outline-none" placeholder="Contoh: 300000">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-3 pt-2">
+                            <button onclick="closeUpsellEditModal()" class="px-4 py-2 border border-[#233044] rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-900">Batal</button>
+                            <button onclick="saveUpsellData()" class="px-4 py-2 bg-[#114B3E] hover:bg-[#155C4E] text-white rounded-xl text-sm font-medium shadow-sm border border-[#D4AF37]/30">Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 7: PENGATURAN HOTEL -->
+            <section id="tab-settings" class="tab-content hidden space-y-6">
+                <div class="bg-[#0E1420] p-6 md:p-8 rounded-2xl border border-[#182234] shadow-sm max-w-2xl mx-auto space-y-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Pengaturan Identitas Hotel & Sinkronisasi</h2>
+                        <p class="text-xs text-slate-400">Informasi hotel dan integrasi spreadsheet telah dikonfigurasi secara otomatis untuk sistem.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Permanently embedded & hidden GAS URL -->
+                        <div class="hidden">
+                            <input type="text" id="settingGasUrl" value="https://script.google.com/macros/s/AKfycbywoFRg73YXbXdLUG-EebXO0jVQBHL2uOIp_YFUYNzaKFy7TTypa2Eu8iYdXYDQiiAKZw/exec">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Hotel</label>
+                            <input type="text" id="settingHotelName" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#D4AF37]" value="Hotel Grand Santhi">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Alamat Hotel</label>
+                            <textarea id="settingHotelAddress" rows="2" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-[#D4AF37]">Jl. Raya Santhi No. 88, Bali</textarea>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">No. Telepon</label>
+                                <input type="text" id="settingHotelPhone" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#D4AF37]" value="0361-5551234">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Upload File Logo Hotel</label>
+                                <input type="file" id="settingHotelLogoFile" accept="image/*" onchange="handleLogoUpload(event)" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#151D2A] file:text-[#D4AF37] hover:file:bg-[#233044]">
+                            </div>
+                        </div>
+                        <div class="pt-2 flex flex-col sm:flex-row justify-between items-center gap-3">
+                            <button onclick="fetchDataFromGoogleSheets()" class="w-full sm:w-auto bg-[#1A365D] hover:bg-[#224479] text-white px-4 py-2.5 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-rotate mr-2"></i>Sinkronisasi Sekarang</button>
+                            <button onclick="saveHotelSettings()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-6 py-2.5 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30">Simpan Pengaturan</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        let currentFilterMode = 'mtd'; 
+        let upsellFilterMode = 'mtd';  
+
+        let hotelConfig = {
+            name: "Hotel Grand Santhi",
+            address: "Jl. Raya Santhi No. 88, Bali",
+            phone: "0361-5551234",
+            logo: null,
+            gasUrl: "https://script.google.com/macros/s/AKfycbywoFRg73YXbXdLUG-EebXO0jVQBHL2uOIp_YFUYNzaKFy7TTypa2Eu8iYdXYDQiiAKZw/exec"
+        };
+
+        let guestsData = [
+            { id: 1, name: "Budi Santoso", date: "2026-04-12", city: "Jakarta", prov: "DKI Jakarta", phone: "081234567890" },
+            { id: 2, name: "Siti Aminah", date: "2026-04-14", city: "Bandung", prov: "Jawa Barat", phone: "081987654321" },
+            { id: 3, name: "Joko Widodo", date: "2026-04-15", city: "Surabaya", prov: "Jawa Timur", phone: "081122334455" },
+            { id: 4, name: "Dewi Lestari", date: "2026-04-18", city: "Bandung", prov: "Jawa Barat", phone: "085678901234" },
+            { id: 5, name: "Ahmad Dhani", date: "2026-04-20", city: "Surabaya", prov: "Jawa Timur", phone: "087788990011" },
+            { id: 6, name: "Rina Nose", date: "2026-03-10", city: "Medan", prov: "Sumatera Utara", phone: "082134567890" }
+        ];
+
+        let comsetData = [
+            { id: 1, date: "2026-04-01", name: "Hotel Grand Santhi (Utama)", avail: 3000, sold: 2340, arr: 1250000 },
+            { id: 2, date: "2026-04-01", name: "Sanur Beach Resort", avail: 3600, sold: 2640, arr: 1150000 },
+            { id: 3, date: "2026-04-01", name: "Ubud Palace Hotel", avail: 2700, sold: 1950, arr: 1300000 },
+            { id: 4, date: "2026-04-01", name: "Kuta Sunset Suites", avail: 4500, sold: 3360, arr: 980000 },
+            { id: 5, date: "2026-04-01", name: "Denpasar Grand", avail: 3300, sold: 2160, arr: 1100000 }
+        ];
+
+        let extendData = [
+            { id: 1, name: "Budi Santoso", room: "302", nights: 2, date: "2026-04-14", revenue: 2500000, phone: "081234567890" },
+            { id: 2, name: "Joko Widodo", room: "504", nights: 1, date: "2026-04-17", revenue: 1250000, phone: "081122334455" }
+        ];
+
+        let repeaterGuestsData = [
+            { id: 1, name: "Budi Santoso", stays: 3, lastDate: "2026-04-12", phone: "081234567890" },
+            { id: 2, name: "Ahmad Dhani", stays: 2, lastDate: "2026-04-20", phone: "087788990011" }
+        ];
+
+        let upsellingTransactions = [
+            { id: 1, service: "Upgrade Room", guestName: "Budi Santoso", phone: "081234567890", date: "2026-04-12", qty: 2, revenue: 600000 },
+            { id: 2, service: "Upgrade Room", guestName: "Dewi Lestari", phone: "085678901234", date: "2026-04-18", qty: 1, revenue: 300000 },
+            { id: 3, service: "Early Check-in", guestName: "Siti Aminah", phone: "081987654321", date: "2026-04-14", qty: 3, revenue: 300000 },
+            { id: 4, service: "Early Check-in", guestName: "Ahmad Dhani", phone: "087788990011", date: "2026-04-20", qty: 1, revenue: 100000 },
+            { id: 5, service: "Late Check-Out", guestName: "Joko Widodo", phone: "081122334455", date: "2026-04-15", qty: 2, revenue: 200000 },
+            { id: 6, service: "Extra Bed", guestName: "Budi Santoso", phone: "081234567890", date: "2026-04-12", qty: 1, revenue: 300000 },
+            { id: 7, service: "Massage", guestName: "Siti Aminah", phone: "081987654321", date: "2026-04-14", qty: 2, revenue: 600000 },
+            { id: 8, service: "Laundry", guestName: "Rina Nose", phone: "082134567890", date: "2026-03-10", qty: 4, revenue: 200000 },
+            { id: 9, service: "Transport", guestName: "Joko Widodo", phone: "081122334455", date: "2026-04-15", qty: 1, revenue: 350000 }
+        ];
+
+        let upsellChartInstance = null;
+        let currentOpenService = null;
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('appSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const isOpen = !sidebar.classList.contains('-translate-x-full');
+
+            if (isOpen) {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+            }
+        }
+
+        function toggleMobileSidebarIfNeeded() {
+            if (window.innerWidth < 768) {
+                toggleMobileSidebar();
+            }
+        }
+
+        async function syncToGoogleSheets(action, payload) {
+            const url = hotelConfig.gasUrl.trim();
+            if (!url) return;
+            
+            try {
+                document.getElementById('syncStatusBadge').classList.remove('hidden');
+                document.getElementById('syncStatusBadge').classList.add('flex');
+                document.getElementById('mobileSyncIndicator').classList.remove('hidden');
+                document.getElementById('mobileSyncIndicator').classList.add('flex');
+                document.getElementById('syncText').innerText = "Menyinkronkan...";
+
+                await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action, data: payload })
+                });
+
+                document.getElementById('syncText').innerText = "Tersinkron";
+                setTimeout(() => {
+                    document.getElementById('syncStatusBadge').classList.add('hidden');
+                    document.getElementById('mobileSyncIndicator').classList.add('hidden');
+                }, 3000);
+            } catch (e) {
+                console.error("Gagal sinkronisasi Google Sheets:", e);
+                document.getElementById('syncText').innerText = "Gagal Sync";
+            }
+        }
+
+        async function fetchDataFromGoogleSheets() {
+            const url = hotelConfig.gasUrl.trim();
+            if (!url) return;
+
+            try {
+                document.getElementById('syncStatusBadge').classList.remove('hidden');
+                document.getElementById('syncStatusBadge').classList.add('flex');
+                document.getElementById('mobileSyncIndicator').classList.remove('hidden');
+                document.getElementById('mobileSyncIndicator').classList.add('flex');
+                document.getElementById('syncText').innerText = "Mengambil Data...";
+
+                const res = await fetch(url + "?action=getAllData");
+                const textRes = await res.text();
+                const result = JSON.parse(textRes);
+                
+                if (result.status === "success") {
+                    if (result.guests) guestsData = result.guests;
+                    if (result.comset) comsetData = result.comset;
+                    if (result.extend) extendData = result.extend;
+                    if (result.repeater) repeaterGuestsData = result.repeater;
+                    if (result.upselling) upsellingTransactions = result.upselling;
+
+                    renderDashboard();
+                    renderGuestTable();
+                    renderComsetFullTable();
+                    renderExtendTable();
+                    renderRepeaterTable();
+                    renderUpsellTable();
+                }
+            } catch (e) {
+                console.error("Fetch error:", e);
+            } finally {
+                document.getElementById('syncStatusBadge').classList.add('hidden');
+                document.getElementById('mobileSyncIndicator').classList.add('hidden');
+            }
+        }
+
+        function setFilterMode(mode) {
+            currentFilterMode = mode;
+            const btnMtd = document.getElementById('btnModeMtd');
+            const btnYtd = document.getElementById('btnModeYtd');
+            const containerMtd = document.getElementById('containerMtd');
+
+            if (mode === 'mtd') {
+                btnMtd.className = "px-3 py-1 rounded-lg text-xs font-bold transition bg-[#114B3E] text-[#D4AF37]";
+                btnYtd.className = "px-3 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white";
+                containerMtd.classList.remove('hidden');
+            } else {
+                btnYtd.className = "px-3 py-1 rounded-lg text-xs font-bold transition bg-[#114B3E] text-[#D4AF37]";
+                btnMtd.className = "px-3 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white";
+                containerMtd.classList.add('hidden');
+            }
+            renderDashboard();
+        }
+
+        function setUpsellFilterMode(mode) {
+            upsellFilterMode = mode;
+            const btnM = document.getElementById('btnUpsellMtd');
+            const btnY = document.getElementById('btnUpsellYtd');
+            const selM = document.getElementById('upsellFilterMonth');
+
+            if (mode === 'mtd') {
+                btnM.className = "px-3 py-1 rounded-lg text-xs font-bold transition bg-[#114B3E] text-[#D4AF37]";
+                btnY.className = "px-3 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white";
+                selM.classList.remove('hidden');
+            } else {
+                btnY.className = "px-3 py-1 rounded-lg text-xs font-bold transition bg-[#114B3E] text-[#D4AF37]";
+                btnM.className = "px-3 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white";
+                selM.classList.add('hidden');
+            }
+            renderUpsellTable();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-[#114B3E]', 'text-white', 'shadow-md', 'shadow-[#114B3E]/30', 'border', 'border-[#D4AF37]/30');
+                btn.classList.add('hover:bg-slate-900', 'text-slate-300');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.querySelector(`.nav-btn[data-target="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('hover:bg-slate-900', 'text-slate-300');
+                activeBtn.classList.add('bg-[#114B3E]', 'text-white', 'shadow-md', 'shadow-[#114B3E]/30', 'border', 'border-[#D4AF37]/30');
+            }
+
+            const titles = {
+                dashboard: "Dashboard Eksekutif & Analisis Pasar",
+                database: "Database Tamu & WhatsApp Blast",
+                comset: "Competitor Set & Revenue Performance",
+                extend: "Data Extend by Direct Booking",
+                repeater: "Data Repeater Guest",
+                upselling: "Upselling & Cross-Selling Performance",
+                settings: "Pengaturan Hotel"
+            };
+            document.getElementById('pageTitle').innerText = titles[tabId] || "Dashboard";
+            document.getElementById('mobileHeaderTitle').innerText = hotelConfig.name;
+
+            if (tabId === 'dashboard') renderDashboard();
+            if (tabId === 'database') renderGuestTable();
+            if (tabId === 'comset') renderComsetFullTable();
+            if (tabId === 'extend') renderExtendTable();
+            if (tabId === 'repeater') renderRepeaterTable();
+            if (tabId === 'upselling') renderUpsellTable();
+        }
+
+        function formatIDR(val) {
+            return "Rp " + Number(val).toLocaleString('id-ID');
+        }
+
+        function renderDashboard() {
+            const m = document.getElementById('filterMonth').value;
+            const y = document.getElementById('filterYear').value;
+
+            const filteredGuests = guestsData.filter(g => {
+                const d = new Date(g.date);
+                if (currentFilterMode === 'mtd') {
+                    return d.getMonth() == m && d.getFullYear() == y;
+                } else {
+                    return d.getFullYear() == y;
+                }
+            });
+
+            const filteredComset = comsetData.filter(c => {
+                const d = new Date(c.date);
+                if (currentFilterMode === 'mtd') {
+                    return d.getMonth() == m && d.getFullYear() == y;
+                } else {
+                    return d.getFullYear() == y;
+                }
+            });
+
+            const filteredUpsell = upsellingTransactions.filter(u => {
+                const d = new Date(u.date);
+                if (currentFilterMode === 'mtd') {
+                    return d.getMonth() == m && d.getFullYear() == y;
+                } else {
+                    return d.getFullYear() == y;
+                }
+            });
+
+            const hotelUtamaItems = filteredComset.filter(c => c.name.toLowerCase().includes("utama") || c.name.toLowerCase().includes("santhi"));
+            
+            let totalSold = 0;
+            let totalAvail = 0;
+            let totalRev = 0;
+
+            if (hotelUtamaItems.length > 0) {
+                hotelUtamaItems.forEach(item => {
+                    totalSold += Number(item.sold) || 0;
+                    totalAvail += Number(item.avail) || 0;
+                    totalRev += (Number(item.sold) || 0) * (Number(item.arr) || 0);
+                });
+            } else if (filteredComset.length > 0) {
+                const fallbackItem = filteredComset[0];
+                totalSold = Number(fallbackItem.sold) || 0;
+                totalAvail = Number(fallbackItem.avail) || 0;
+                totalRev = totalSold * (Number(fallbackItem.arr) || 0);
+            }
+
+            const hotelOcc = totalAvail > 0 ? Math.round((totalSold / totalAvail) * 100) : 0;
+            const totalUpsellRev = filteredUpsell.reduce((acc, i) => acc + i.revenue, 0);
+
+            document.getElementById('dashHotelRevenue').innerText = formatIDR(totalRev);
+            document.getElementById('dashOcc').innerText = hotelOcc + "%";
+            document.getElementById('dashUpsellRevenue').innerText = formatIDR(totalUpsellRev);
+
+            const locationMap = {};
+            filteredGuests.forEach(g => {
+                const key = `${g.city}, ${g.prov}`;
+                if (!locationMap[key]) locationMap[key] = { city: g.city, prov: g.prov, count: 0, guests: [] };
+                locationMap[key].count++;
+                locationMap[key].guests.push(g);
+            });
+
+            const sortedLocations = Object.values(locationMap).sort((a, b) => b.count - a.count);
+            const locContainer = document.getElementById('dashLocationList');
+            locContainer.innerHTML = '';
+
+            if (sortedLocations.length === 0) {
+                locContainer.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">Tidak ada data tamu pada periode ini.</p>`;
+            } else {
+                sortedLocations.forEach(loc => {
+                    locContainer.innerHTML += `
+                        <div onclick="showCityGuests('${loc.city}', '${loc.prov}')" class="p-3 bg-[#151D2A] hover:bg-[#1C273B] border border-[#233044] rounded-xl cursor-pointer transition flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-white text-sm">${loc.city}</h4>
+                                <span class="text-xs text-slate-400">${loc.prov}</span>
+                            </div>
+                            <span class="bg-[#114B3E] text-[#D4AF37] font-bold text-xs px-2.5 py-1 rounded-lg border border-[#D4AF37]/30">${loc.count} Tamu</span>
+                        </div>
+                    `;
+                });
+            }
+
+            const comtbody = document.getElementById('dashComsetTableBody');
+            comtbody.innerHTML = '';
+            if (filteredComset.length === 0) {
+                comtbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Tidak ada data comset pada periode ini.</td></tr>`;
+            } else {
+                filteredComset.forEach(item => {
+                    const occ = item.avail > 0 ? Math.round((item.sold / item.avail) * 100) : 0;
+                    const rev = item.sold * item.arr;
+                    comtbody.innerHTML += `
+                        <tr class="hover:bg-[#151D2A]/50 border-b border-[#182234]">
+                            <td class="p-3 font-semibold text-slate-200">${item.name}</td>
+                            <td class="p-3 text-center text-slate-300">${item.sold} / ${item.avail}</td>
+                            <td class="p-3 text-right text-slate-300">${formatIDR(item.arr)}</td>
+                            <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-semibold ${occ >= 70 ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-900/50' : 'bg-amber-950/60 text-amber-400 border border-amber-900/50'}">${occ}%</span></td>
+                            <td class="p-3 text-right font-semibold text-white">${formatIDR(rev)}</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        function showCityGuests(city, prov) {
+            const m = document.getElementById('filterMonth').value;
+            const y = document.getElementById('filterYear').value;
+
+            const modalGuests = guestsData.filter(g => {
+                const d = new Date(g.date);
+                if (currentFilterMode === 'mtd') {
+                    return g.city === city && g.prov === prov && d.getMonth() == m && d.getFullYear() == y;
+                } else {
+                    return g.city === city && g.prov === prov && d.getFullYear() == y;
+                }
+            });
+
+            document.getElementById('modalCityTitle').innerText = `Detail Tamu: ${city}, ${prov}`;
+            const tbody = document.getElementById('modalCityGuests');
+            tbody.innerHTML = '';
+            if(modalGuests.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 text-xs">Tidak ada data detail tamu.</td></tr>`;
+            } else {
+                modalGuests.forEach(g => {
+                    const cleanPhone = String(g.phone || "").replace(/\D/g, '');
+                    const waText = encodeURIComponent(`Halo ${g.name}, terima kasih telah menginap di ${hotelConfig.name}.`);
+                    const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waText}` : "#";
+
+                    tbody.innerHTML += `
+                        <tr class="border-b border-[#182234]">
+                            <td class="p-2 font-medium text-slate-200">${g.name}</td>
+                            <td class="p-2 text-slate-400">${g.date}</td>
+                            <td class="p-2 text-slate-400">${g.city}, ${g.prov}</td>
+                            <td class="p-2 text-center">
+                                <a href="${waLink}" target="_blank" class="inline-flex items-center space-x-1.5 px-3 py-1 bg-emerald-950/60 text-emerald-400 border border-emerald-900/50 rounded-lg text-xs font-semibold hover:bg-emerald-900/80 transition">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                    <span>${g.phone || 'No WA'}</span>
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            document.getElementById('cityDetailModal').classList.remove('hidden');
+            document.getElementById('cityDetailModal').classList.add('flex');
+        }
+
+        function closeCityModal() {
+            document.getElementById('cityDetailModal').classList.add('hidden');
+            document.getElementById('cityDetailModal').classList.remove('flex');
+        }
+
+        function renderGuestTable() {
+            const tbody = document.getElementById('guestTableBody');
+            tbody.innerHTML = '';
+            guestsData.forEach((g, index) => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-[#151D2A]/50 border-b border-[#182234]">
+                        <td class="p-3 font-semibold text-slate-200">${g.name}</td>
+                        <td class="p-3 text-slate-400">${g.date}</td>
+                        <td class="p-3 text-slate-400">${g.city}</td>
+                        <td class="p-3 text-slate-400">${g.prov}</td>
+                        <td class="p-3 text-slate-300 font-medium"><i class="fa-brands fa-whatsapp text-emerald-400 mr-1.5"></i>${g.phone || '-'}</td>
+                        <td class="p-3 text-center space-x-2">
+                            <button onclick="editGuest(${index})" class="text-[#D4AF37] hover:text-white text-xs font-semibold px-2 py-1 bg-[#151D2A] border border-[#233044] rounded-lg"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button onclick="deleteGuest(${index})" class="text-rose-400 hover:text-rose-300 text-xs font-semibold px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openAddGuestModal() {
+            document.getElementById('guestModalTitle').innerText = "Tambah Tamu Baru";
+            document.getElementById('guestIndexId').value = "";
+            document.getElementById('inputGuestName').value = "";
+            document.getElementById('inputGuestDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('inputGuestCity').value = "";
+            document.getElementById('inputGuestProv').value = "";
+            document.getElementById('inputGuestPhone').value = "";
+            document.getElementById('guestModal').classList.remove('hidden');
+            document.getElementById('guestModal').classList.add('flex');
+        }
+
+        function editGuest(index) {
+            const g = guestsData[index];
+            document.getElementById('guestModalTitle').innerText = "Edit Data Tamu";
+            document.getElementById('guestIndexId').value = index;
+            document.getElementById('inputGuestName').value = g.name;
+            document.getElementById('inputGuestDate').value = g.date;
+            document.getElementById('inputGuestCity').value = g.city;
+            document.getElementById('inputGuestProv').value = g.prov;
+            document.getElementById('inputGuestPhone').value = g.phone || "";
+            document.getElementById('guestModal').classList.remove('hidden');
+            document.getElementById('guestModal').classList.add('flex');
+        }
+
+        function closeGuestModal() {
+            document.getElementById('guestModal').classList.add('hidden');
+            document.getElementById('guestModal').classList.remove('flex');
+        }
+
+        function saveGuestData() {
+            const idx = document.getElementById('guestIndexId').value;
+            const data = {
+                id: idx === "" ? Date.now() : guestsData[idx].id,
+                name: document.getElementById('inputGuestName').value,
+                date: document.getElementById('inputGuestDate').value,
+                city: document.getElementById('inputGuestCity').value,
+                prov: document.getElementById('inputGuestProv').value,
+                phone: document.getElementById('inputGuestPhone').value
+            };
+
+            if (!data.name || !data.date) {
+                alert("Nama dan Tanggal Check-in wajib diisi!");
+                return;
+            }
+
+            if (idx === "") {
+                guestsData.push(data);
+            } else {
+                guestsData[idx] = data;
+            }
+
+            closeGuestModal();
+            renderGuestTable();
+            syncToGoogleSheets('saveGuest', data);
+        }
+
+        function deleteGuest(index) {
+            const item = guestsData[index];
+            if (confirm("Yakin ingin menghapus data tamu ini?")) {
+                guestsData.splice(index, 1);
+                renderGuestTable();
+                syncToGoogleSheets('deleteGuest', item);
+            }
+        }
+
+        function openBlastModal() {
+            document.getElementById('blastModal').classList.remove('hidden');
+            document.getElementById('blastModal').classList.add('flex');
+        }
+
+        function closeBlastModal() {
+            document.getElementById('blastModal').classList.add('hidden');
+            document.getElementById('blastModal').classList.remove('flex');
+        }
+
+        function executeBlastWhatsApp() {
+            const target = document.getElementById('blastTarget').value;
+            let template = document.getElementById('blastMessage').value;
+            let count = 0;
+
+            let recipients = guestsData;
+            if (target === 'repeater') {
+                const repNames = repeaterGuestsData.map(r => r.name);
+                recipients = guestsData.filter(g => repNames.includes(g.name));
+            }
+
+            recipients.forEach(g => {
+                let msg = template.replace('[NamaTamu]', g.name).replace('[NamaHotel]', hotelConfig.name).replace('[KotaHotel]', 'kota Anda');
+                console.log(`Sending WhatsApp to ${g.phone}: ${msg}`);
+                count++;
+            });
+
+            closeBlastModal();
+            alert(`Berhasil memproses WhatsApp Blast ke ${count} nomor tamu.`);
+        }
+
+        function renderComsetFullTable() {
+            const tbody = document.getElementById('comgetTableFullBody');
+            tbody.innerHTML = '';
+            const totalAvail = comsetData.reduce((a, b) => a + Number(b.avail), 0);
+            const totalSold = comsetData.reduce((a, b) => a + Number(b.sold), 0);
+            const avgOcc = totalSold / (totalAvail || 1);
+            const avgArr = comsetData.reduce((a, b) => a + Number(b.arr), 0) / (comsetData.length || 1);
+            const avgRevpar = comsetData.reduce((a, b) => a + ((Number(b.sold) * Number(b.arr)) / (Number(b.avail) || 1)), 0) / (comsetData.length || 1);
+
+            comsetData.forEach((item, index) => {
+                const occ = Number(item.sold) / (Number(item.avail) || 1);
+                const rev = Number(item.sold) * Number(item.arr);
+                const mktShare = Number(item.avail) / (totalAvail || 1);
+                const revpar = rev / (Number(item.avail) || 1);
+                const mpi = (occ / (avgOcc || 1)).toFixed(2);
+                const rgi = (revpar / (avgRevpar || 1)).toFixed(2);
+                const ari = (Number(item.arr) / (avgArr || 1)).toFixed(2);
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-[#151D2A]/50 border-b border-[#182234]">
+                        <td class="p-2.5 text-slate-400">${item.date || '-'}</td>
+                        <td class="p-2.5 font-bold text-white">${item.name}</td>
+                        <td class="p-2.5 text-center text-slate-300">${item.avail}</td>
+                        <td class="p-2.5 text-center text-slate-300">${item.sold}</td>
+                        <td class="p-2.5 text-center text-slate-300">${(occ*100).toFixed(1)}%</td>
+                        <td class="p-2.5 text-right text-slate-300">${formatIDR(item.arr)}</td>
+                        <td class="p-2.5 text-right font-semibold text-white">${formatIDR(rev)}</td>
+                        <td class="p-2.5 text-center text-slate-300">${(mktShare*100).toFixed(1)}%</td>
+                        <td class="p-2.5 text-center text-slate-300">${formatIDR(Math.round(revpar))}</td>
+                        <td class="p-2.5 text-center font-semibold text-[#D4AF37]">${mpi} / ${rgi} / ${ari}</td>
+                        <td class="p-2.5 text-center space-x-1">
+                            <button onclick="editComset(${index})" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteComset(${index})" class="text-rose-400 text-xs px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openComsetModel() {
+            document.getElementById('comsetTitleModal').innerText = "Tambah Komset Baru";
+            document.getElementById('comsetIndexId').value = "";
+            document.getElementById('inputComsetDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('inputComsetName').value = "Hotel Grand Santhi (Utama)";
+            document.getElementById('inputComsetAvail').value = "";
+            document.getElementById('inputComsetSold').value = "";
+            document.getElementById('inputComsetArr').value = "";
+            document.getElementById('comsetModel').classList.remove('hidden');
+            document.getElementById('comsetModel').classList.add('flex');
+        }
+
+        function editComset(index) {
+            const item = comsetData[index];
+            document.getElementById('comsetTitleModal').innerText = "Edit Data Komset";
+            document.getElementById('comsetIndexId').value = index;
+            document.getElementById('inputComsetDate').value = item.date || "";
+            document.getElementById('inputComsetName').value = item.name;
+            document.getElementById('inputComsetAvail').value = item.avail;
+            document.getElementById('inputComsetSold').value = item.sold;
+            document.getElementById('inputComsetArr').value = item.arr;
+            document.getElementById('comsetModel').classList.remove('hidden');
+            document.getElementById('comsetModel').classList.add('flex');
+        }
+
+        function closeComsetModel() {
+            document.getElementById('comsetModel').classList.add('hidden');
+            document.getElementById('comsetModel').classList.remove('flex');
+        }
+
+        function saveComsetData() {
+            const idx = document.getElementById('comsetIndexId').value;
+            const data = {
+                id: idx === "" ? Date.now() : comsetData[idx].id,
+                date: document.getElementById('inputComsetDate').value,
+                name: document.getElementById('inputComsetName').value,
+                avail: Number(document.getElementById('inputComsetAvail').value),
+                sold: Number(document.getElementById('inputComsetSold').value),
+                arr: Number(document.getElementById('inputComsetArr').value)
+            };
+
+            if (!data.name || !data.date) {
+                alert("Tanggal dan Nama Hotel wajib diisi!");
+                return;
+            }
+
+            if (idx === "") {
+                comsetData.push(data);
+            } else {
+                comsetData[idx] = data;
+            }
+
+            closeComsetModel();
+            renderComsetFullTable();
+            syncToGoogleSheets('saveComset', data);
+        }
+
+        function deleteComset(index) {
+            const item = comsetData[index];
+            if (confirm("Yakin ingin menghapus hotel ini dari comset?")) {
+                comsetData.splice(index, 1);
+                renderComsetFullTable();
+                syncToGoogleSheets('deleteComset', item);
+            }
+        }
+
+        function renderExtendTable() {
+            const tbody = document.getElementById('extendTableBody');
+            tbody.innerHTML = '';
+            extendData.forEach((item, index) => {
+                const cleanPhone = String(item.phone || "").replace(/\D/g, '');
+                const waText = encodeURIComponent(`Halo ${item.name}, terima kasih telah memperpanjang masa menginap di Kamar ${item.room} Hotel Grand Santhi.`);
+                const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waText}` : "#";
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-[#151D2A]/50 border-b border-[#182234]">
+                        <td class="p-3 font-semibold text-slate-200">${item.name}</td>
+                        <td class="p-3 text-slate-400 font-medium">Kamar ${item.room}</td>
+                        <td class="p-3 text-center"><span class="bg-[#114B3E]/50 text-[#D4AF37] border border-[#114B3E] px-2.5 py-1 rounded-lg font-bold">${item.nights} Malam</span></td>
+                        <td class="p-3 text-slate-400">${item.date}</td>
+                        <td class="p-3 text-right font-semibold text-white">${formatIDR(item.revenue)}</td>
+                        <td class="p-3 text-center">
+                            <a href="${waLink}" target="_blank" class="inline-flex items-center space-x-1.5 px-3 py-1 bg-emerald-950/60 text-emerald-400 border border-emerald-900/50 rounded-lg text-xs font-semibold hover:bg-emerald-900/80 transition">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                <span>${item.phone || 'No WA'}</span>
+                            </a>
+                        </td>
+                        <td class="p-3 text-center space-x-2">
+                            <button onclick="editExtend(${index})" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button onclick="deleteExtend(${index})" class="text-rose-400 text-xs px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openExtendModal() {
+            document.getElementById('extendModalTitle').innerText = "Tambah Extend by Direct";
+            document.getElementById('extendIndexId').value = "";
+            document.getElementById('inputExtName').value = "";
+            document.getElementById('inputExtRoom').value = "";
+            document.getElementById('inputExtNights').value = "1";
+            document.getElementById('inputExtDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('inputExtRevenue').value = "";
+            document.getElementById('inputExtPhone').value = "";
+            document.getElementById('extendModal').classList.remove('hidden');
+            document.getElementById('extendModal').classList.add('flex');
+        }
+
+        function editExtend(index) {
+            const item = extendData[index];
+            document.getElementById('extendModalTitle').innerText = "Edit Data Extend";
+            document.getElementById('extendIndexId').value = index;
+            document.getElementById('inputExtName').value = item.name;
+            document.getElementById('inputExtRoom').value = item.room;
+            document.getElementById('inputExtNights').value = item.nights;
+            document.getElementById('inputExtDate').value = item.date;
+            document.getElementById('inputExtRevenue').value = item.revenue;
+            document.getElementById('inputExtPhone').value = item.phone || "";
+            document.getElementById('extendModal').classList.remove('hidden');
+            document.getElementById('extendModal').classList.add('flex');
+        }
+
+        function closeExtendModal() {
+            document.getElementById('extendModal').classList.add('hidden');
+            document.getElementById('extendModal').classList.remove('flex');
+        }
+
+        function saveExtendData() {
+            const idx = document.getElementById('extendIndexId').value;
+            const data = {
+                id: idx === "" ? Date.now() : extendData[idx].id,
+                name: document.getElementById('inputExtName').value,
+                room: document.getElementById('inputExtRoom').value,
+                nights: Number(document.getElementById('inputExtNights').value),
+                date: document.getElementById('inputExtDate').value,
+                revenue: Number(document.getElementById('inputExtRevenue').value),
+                phone: document.getElementById('inputExtPhone').value
+            };
+
+            if (idx === "") extendData.push(data);
+            else extendData[idx] = data;
+
+            closeExtendModal();
+            renderExtendTable();
+            syncToGoogleSheets('saveExtend', data);
+        }
+
+        function deleteExtend(index) {
+            const item = extendData[index];
+            extendData.splice(index, 1);
+            renderExtendTable();
+            syncToGoogleSheets('deleteExtend', item);
+        }
+
+        function renderRepeaterTable() {
+            const tbody = document.getElementById('repeaterTableBody');
+            tbody.innerHTML = '';
+            repeaterGuestsData.forEach((item, index) => {
+                const cleanPhone = String(item.phone || "").replace(/\D/g, '');
+                const waText = encodeURIComponent(`Halo ${item.name}, selamat datang kembali di ${hotelConfig.name}! Terima kasih atas kesetiaan Anda.`);
+                const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waText}` : "#";
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-[#151D2A]/50 border-b border-[#182234]">
+                        <td class="p-3 font-semibold text-slate-200">${item.name}</td>
+                        <td class="p-3 text-center"><span class="bg-[#114B3E]/50 text-[#D4AF37] border border-[#114B3E] px-2.5 py-1 rounded-lg font-bold">${item.stays}x Stay</span></td>
+                        <td class="p-3 text-slate-400">${item.lastDate}</td>
+                        <td class="p-3 text-center">
+                            <a href="${waLink}" target="_blank" class="inline-flex items-center space-x-1.5 px-3 py-1 bg-emerald-950/60 text-emerald-400 border border-emerald-900/50 rounded-lg text-xs font-semibold hover:bg-emerald-900/80 transition">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                <span>${item.phone || 'No WA'}</span>
+                            </a>
+                        </td>
+                        <td class="p-3 text-center space-x-2">
+                            <button onclick="editRepeater(${index})" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button onclick="deleteRepeater(${index})" class="text-rose-400 text-xs px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openRepeaterModal() {
+            document.getElementById('repeaterModalTitle').innerText = "Tambah Repeater Guest";
+            document.getElementById('repeaterIndexId').value = "";
+            document.getElementById('inputRepName').value = "";
+            document.getElementById('inputRepStays').value = "2";
+            document.getElementById('inputRepDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('inputRepPhone').value = "";
+            document.getElementById('repeaterModal').classList.remove('hidden');
+            document.getElementById('repeaterModal').classList.add('flex');
+        }
+
+        function editRepeater(index) {
+            const item = repeaterGuestsData[index];
+            document.getElementById('repeaterModalTitle').innerText = "Edit Repeater Guest";
+            document.getElementById('repeaterIndexId').value = index;
+            document.getElementById('inputRepName').value = item.name;
+            document.getElementById('inputRepStays').value = item.stays;
+            document.getElementById('inputRepDate').value = item.lastDate;
+            document.getElementById('inputRepPhone').value = item.phone || "";
+            document.getElementById('repeaterModal').classList.remove('hidden');
+            document.getElementById('repeaterModal').classList.add('flex');
+        }
+
+        function closeRepeaterModal() {
+            document.getElementById('repeaterModal').classList.add('hidden');
+            document.getElementById('repeaterModal').classList.remove('flex');
+        }
+
+        function saveRepeateradata() {
+            const idx = document.getElementById('repeaterIndexId').value;
+            const data = {
+                id: idx === "" ? Date.now() : repeaterGuestsData[idx].id,
+                name: document.getElementById('inputRepName').value,
+                stays: Number(document.getElementById('inputRepStays').value),
+                lastDate: document.getElementById('inputRepDate').value,
+                phone: document.getElementById('inputRepPhone').value
+            };
+
+            if (idx === "") repeaterGuestsData.push(data);
+            else repeaterGuestsData[idx] = data;
+
+            closeRepeaterModal();
+            renderRepeaterTable();
+            syncToGoogleSheets('saveRepeater', data);
+        }
+
+        function deleteRepeater(index) {
+            const item = repeaterGuestsData[index];
+            repeaterGuestsData.splice(index, 1);
+            renderRepeaterTable();
+            syncToGoogleSheets('deleteRepeater', item);
+        }
+
+        function renderUpsellTable() {
+            const m = document.getElementById('upsellFilterMonth').value;
+            const y = document.getElementById('upsellFilterYear').value;
+
+            const filteredTx = upsellingTransactions.filter(t => {
+                const d = new Date(t.date);
+                if (upsellFilterMode === 'mtd') {
+                    return d.getMonth() == m && d.getFullYear() == y;
+                } else {
+                    return d.getFullYear() == y;
+                }
+            });
+
+            const serviceMap = {};
+            filteredTx.forEach(t => {
+                if (!serviceMap[t.service]) {
+                    serviceMap[t.service] = { service: t.service, totalQty: 0, totalRev: 0, guests: [] };
+                }
+                serviceMap[t.service].totalQty += Number(t.qty);
+                serviceMap[t.service].totalRev += Number(t.revenue);
+                serviceMap[t.service].guests.push(t);
+            });
+
+            const tbody = document.getElementById('upsellTableBody');
+            tbody.innerHTML = '';
+
+            const servicesList = Object.values(serviceMap);
+            if (servicesList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 text-xs">Tidak ada data transaksi upselling pada periode ini.</td></tr>`;
+                return;
+            }
+
+            servicesList.forEach(item => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-[#151D2A]/50 border-b border-[#182234]">
+                        <td class="p-3 font-bold text-white">${item.service}</td>
+                        <td class="p-3 text-center text-slate-300 font-medium">${item.totalQty}</td>
+                        <td class="p-3 text-right font-semibold text-[#D4AF37]">${formatIDR(item.totalRev)}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="showUpsellDetail('${item.service}')" class="px-3 py-1 bg-[#114B3E]/60 text-emerald-400 border border-[#114B3E] rounded-lg text-xs font-semibold hover:bg-[#114B3E]">
+                                <i class="fa-solid fa-users mr-1"></i> ${item.guests.length} Tamu
+                            </button>
+                        </td>
+                        <td class="p-3 text-center">
+                            <button onclick="openUpsellModal()" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-plus"></i> Tambah</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function showUpsellDetail(serviceName) {
+            currentOpenService = serviceName;
+            const m = document.getElementById('upsellFilterMonth').value;
+            const y = document.getElementById('upsellFilterYear').value;
+
+            const filteredTx = upsellingTransactions.filter(t => {
+                const d = new Date(t.date);
+                if (upsellFilterMode === 'mtd') {
+                    return t.service === serviceName && d.getMonth() == m && d.getFullYear() == y;
+                } else {
+                    return t.service === serviceName && d.getFullYear() == y;
+                }
+            });
+
+            document.getElementById('modalUpsellTitle').innerText = `Daftar Tamu Layanan: ${serviceName}`;
+            const tbody = document.getElementById('modalUpsellGuestsBody');
+            tbody.innerHTML = '';
+
+            if (filteredTx.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Tidak ada tamu.</td></tr>`;
+            } else {
+                filteredTx.forEach(t => {
+                    const globalIndex = upsellingTransactions.findIndex(item => item.id === t.id);
+                    const cleanPhone = String(t.phone || "").replace(/\D/g, '');
+                    const waText = encodeURIComponent(`Halo ${t.guestName}, terima kasih telah memesan layanan ${t.service} di ${hotelConfig.name}.`);
+                    const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waText}` : "#";
+
+                    tbody.innerHTML += `
+                        <tr class="border-b border-[#182234]">
+                            <td class="p-2 font-medium text-slate-200">
+                                <div>${t.guestName}</div>
+                                <a href="${waLink}" target="_blank" class="text-emerald-400 hover:underline text-[11px] inline-flex items-center mt-0.5"><i class="fa-brands fa-whatsapp mr-1"></i>${t.phone || 'Direct WA'}</a>
+                            </td>
+                            <td class="p-2 text-slate-400">${t.date}</td>
+                            <td class="p-2 text-center text-slate-300">${t.qty}</td>
+                            <td class="p-2 text-right font-semibold text-white">${formatIDR(t.revenue)}</td>
+                            <td class="p-2 text-center space-x-1">
+                                <button onclick="editUpsell(${globalIndex})" class="text-[#D4AF37] hover:text-white text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteUpsell(${globalIndex})" class="text-rose-400 text-xs px-2.5 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            document.getElementById('upsellDetailModal').classList.remove('hidden');
+            document.getElementById('upsellDetailModal').classList.add('flex');
+        }
+
+        function closeUpsellDetailModal() {
+            document.getElementById('upsellDetailModal').classList.add('hidden');
+            document.getElementById('upsellDetailModal').classList.remove('flex');
+            currentOpenService = null;
+        }
+
+        function openUpsellModal() {
+            document.getElementById('upsellModalTitle').innerText = "Tambah Transaksi Upselling";
+            document.getElementById('upsellIndexId').value = "";
+            document.getElementById('inputUpsellDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('inputUpsellGuest').value = "";
+            document.getElementById('inputUpsellPhone').value = "";
+            document.getElementById('inputUpsellService').value = "Upgrade Room";
+            document.getElementById('inputUpsellQty').value = "1";
+            document.getElementById('inputUpsellRev').value = "";
+            document.getElementById('upsellModal').classList.remove('hidden');
+            document.getElementById('upsellModal').classList.add('flex');
+        }
+
+        function editUpsell(index) {
+            const item = upsellingTransactions[index];
+            document.getElementById('upsellModalTitle').innerText = "Edit Transaksi Upselling";
+            document.getElementById('upsellIndexId').value = index;
+            document.getElementById('inputUpsellDate').value = item.date;
+            document.getElementById('inputUpsellGuest').value = item.guestName;
+            document.getElementById('inputUpsellPhone').value = item.phone || "";
+            document.getElementById('inputUpsellService').value = item.service;
+            document.getElementById('inputUpsellQty').value = item.qty;
+            document.getElementById('inputUpsellRev').value = item.revenue;
+            
+            closeUpsellDetailModal();
+
+            document.getElementById('upsellModal').classList.remove('hidden');
+            document.getElementById('upsellModal').classList.add('flex');
+        }
+
+        function closeUpsellEditModal() {
+            document.getElementById('upsellModal').classList.add('hidden');
+            document.getElementById('upsellModal').classList.remove('flex');
+        }
+
+        function saveUpsellData() {
+            const idx = document.getElementById('upsellIndexId').value;
+            const data = {
+                id: idx === "" ? Date.now() : upsellingTransactions[idx].id,
+                date: document.getElementById('inputUpsellDate').value,
+                guestName: document.getElementById('inputUpsellGuest').value,
+                phone: document.getElementById('inputUpsellPhone').value,
+                service: document.getElementById('inputUpsellService').value,
+                qty: Number(document.getElementById('inputUpsellQty').value),
+                revenue: Number(document.getElementById('inputUpsellRev').value)
+            };
+
+            if (!data.guestName || !data.date || !data.revenue) {
+                alert("Tanggal, Nama Tamu, dan Revenue wajib diisi!");
+                return;
+            }
+
+            if (idx === "") {
+                upsellingTransactions.push(data);
+            } else {
+                upsellingTransactions[idx] = data;
+            }
+
+            closeUpsellEditModal();
+            renderUpsellTable();
+            syncToGoogleSheets('saveUpsell', data);
+        }
+
+        function deleteUpsell(index) {
+            if (confirm("Yakin ingin menghapus transaksi upselling ini?")) {
+                const item = upsellingTransactions[index];
+                const activeService = currentOpenService || item.service;
+                upsellingTransactions.splice(index, 1);
+                renderUpsellTable();
+                syncToGoogleSheets('deleteUpsell', item);
+                
+                showUpsellDetail(activeService);
+            }
+        }
+
+        function openUpsellChartModal() {
+            document.getElementById('upsellChartModal').classList.remove('hidden');
+            document.getElementById('upsellChartModal').classList.add('flex');
+
+            const ctx = document.getElementById('upsellComparisonChart').getContext('2d');
+            if (upsellChartInstance) upsellChartInstance.destroy();
+
+            const serviceNames = ["Upgrade Room", "Early Check-in", "Late Check-Out", "Extra Bed", "Massage", "Laundry", "Transport"];
+            const currData = serviceNames.map(s => {
+                return upsellingTransactions.filter(t => t.service === s).reduce((acc, t) => acc + t.revenue, 0);
+            });
+            const lastData = currData.map(val => Math.round(val * 0.85));
+
+            upsellChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: serviceNames,
+                    datasets: [
+                        {
+                            label: 'Periode Ini (Rp)',
+                            data: currData,
+                            backgroundColor: '#D4AF37',
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Tahun Lalu (Rp)',
+                            data: lastData,
+                            backgroundColor: '#1A365D',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            position: 'top',
+                            labels: { color: '#cbd5e1' }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#182234' } },
+                        y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: '#182234' } }
+                    }
+                }
+            });
+        }
+
+        function closeUpsellModal() {
+            document.getElementById('upsellChartModal').classList.add('hidden');
+            document.getElementById('upsellChartModal').classList.remove('flex');
+        }
+
+        function saveHotelSettings() {
+            hotelConfig.name = document.getElementById('settingHotelName').value;
+            hotelConfig.address = document.getElementById('settingHotelAddress').value;
+            hotelConfig.phone = document.getElementById('settingHotelPhone').value;
+
+            document.getElementById('sidebarHotelName').innerText = hotelConfig.name;
+            document.getElementById('headerHotelDisplay').innerText = hotelConfig.name;
+            document.getElementById('mobileHeaderTitle').innerText = hotelConfig.name;
+
+            alert("Pengaturan hotel berhasil disimpan!");
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    hotelConfig.logo = e.target.result;
+                    const container = document.getElementById('sidebarLogoContainer');
+                    container.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        window.onload = function() {
+            renderDashboard();
+            renderUpsellTable();
+            fetchDataFromGoogleSheets();
+        };
+    </script>
+</body>
+</html>
