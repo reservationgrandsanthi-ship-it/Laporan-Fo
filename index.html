@@ -26,7 +26,6 @@
 </head>
 <body class="h-full bg-slate-950 text-slate-100 font-sans antialiased flex flex-col md:flex-row overflow-hidden">
 
-    <!-- Mobile Header Bar -->
     <div class="md:hidden bg-[#070A0F] border-b border-[#151D2A] px-4 py-3 flex items-center justify-between z-30 shrink-0">
         <div class="flex items-center space-x-3">
             <button onclick="toggleMobileSidebar()" class="w-10 h-10 rounded-xl bg-[#0A0D14] border border-[#233044] text-[#D4AF37] flex items-center justify-center text-lg active:scale-95 transition">
@@ -45,13 +44,10 @@
         </div>
     </div>
 
-    <!-- Mobile Sidebar Backdrop Overlay -->
     <div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-30 hidden md:hidden transition-opacity"></div>
 
-    <!-- Sidebar Navigation (Desktop Fixed & Mobile Slide Drawer) -->
     <aside id="appSidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-[#070A0F] text-slate-300 flex flex-col justify-between shrink-0 shadow-2xl z-40 border-r border-[#151D2A] transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
         <div>
-            <!-- Hotel Brand Header -->
             <div class="p-6 border-b border-[#151D2A] flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div id="sidebarLogoContainer" class="w-12 h-12 rounded-xl bg-[#0A0D14] border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] font-bold text-xl overflow-hidden shadow-lg">
@@ -67,7 +63,6 @@
                 </button>
             </div>
 
-            <!-- Navigation Links with Interactive Click Handlers -->
             <nav class="p-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-180px)]">
                 <button onclick="switchTab('dashboard'); toggleMobileSidebarIfNeeded();" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all bg-[#114B3E] text-white shadow-md shadow-[#114B3E]/30 border border-[#D4AF37]/30" data-target="dashboard">
                     <i class="fa-solid fa-chart-pie w-5 text-[#D4AF37]"></i>
@@ -96,7 +91,6 @@
             </nav>
         </div>
 
-        <!-- Bottom Setting Section -->
         <div class="p-4 border-t border-[#151D2A]">
             <button onclick="switchTab('settings'); toggleMobileSidebarIfNeeded();" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-900 text-slate-300" data-target="settings">
                 <i class="fa-solid fa-gear w-5 text-[#D4AF37]"></i>
@@ -106,7 +100,6 @@
     </aside>
 
     <main class="flex-1 flex flex-col h-full overflow-y-auto bg-[#0B0F17]">
-        <!-- Desktop Top Navbar -->
         <header class="bg-[#0E1420] border-b border-[#182234] px-6 py-4 hidden md:flex justify-between items-center sticky top-0 z-10 shadow-sm">
             <div class="flex items-center space-x-4">
                 <span id="pageTitle" class="text-xl font-bold text-white tracking-wide">Dashboard Eksekutif</span>
@@ -123,12 +116,10 @@
             </div>
         </header>
 
-        <!-- Dynamic Content Container -->
         <div class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6">
 
-            <!-- ================= TAB 1: DASHBOARD ================= -->
+            <!-- TAB 1: DASHBOARD -->
             <section id="tab-dashboard" class="tab-content space-y-6">
-                <!-- Filter Bar (MTD & YTD) -->
                 <div class="bg-[#0E1420] p-4 rounded-2xl shadow-sm border border-[#182234] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div class="flex items-center space-x-3">
                         <i class="fa-solid fa-filter text-[#D4AF37]"></i>
@@ -139,7 +130,6 @@
                         </div>
                     </div>
                     <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                        <!-- MTD Filter (Bulan) -->
                         <div id="containerMtd" class="flex-1 sm:flex-initial">
                             <select id="filterMonth" onchange="renderDashboard()" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 text-sm rounded-xl px-3 py-2 focus:ring-2 focus:ring-[#D4AF37] outline-none">
                                 <option value="0">Januari</option>
@@ -156,7 +146,6 @@
                                 <option value="11">Desember</option>
                             </select>
                         </div>
-                        <!-- Tahun Filter -->
                         <div class="flex-1 sm:flex-initial">
                             <select id="filterYear" onchange="renderDashboard()" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 text-sm rounded-xl px-3 py-2 focus:ring-2 focus:ring-[#D4AF37] outline-none">
                                 <option value="2025">2025</option>
@@ -167,9 +156,7 @@
                     </div>
                 </div>
 
-                <!-- KPI Quick Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                    <!-- 1. Revenue Hotel -->
                     <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-[11px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Revenue Hotel (Room)</p>
@@ -180,7 +167,6 @@
                             <i class="fa-solid fa-wallet"></i>
                         </div>
                     </div>
-                    <!-- 2. Occupancy -->
                     <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm flex items-center justify-between">
                         <div>
                             <p class="text-[11px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Rata-rata Occupancy</p>
@@ -191,7 +177,6 @@
                             <i class="fa-solid fa-percent"></i>
                         </div>
                     </div>
-                    <!-- 3. Revenue Upselling -->
                     <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm flex items-center justify-between sm:col-span-2 lg:col-span-1">
                         <div>
                             <p class="text-[11px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Revenue Upselling</p>
@@ -204,46 +189,47 @@
                     </div>
                 </div>
 
-                <!-- Dashboard Section A & B Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Database Kota & Provinsi Ranking (A) -->
-                    <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm lg:col-span-1 flex flex-col">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-bold text-white text-base">Asal Tamu (Kota & Provinsi)</h3>
-                            <span class="text-xs bg-[#151D2A] text-[#D4AF37] px-2.5 py-1 rounded-md border border-[#233044]">Urut Terbesar</span>
+                    <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm lg:col-span-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-bold text-white text-base">Asal Tamu (Kota & Provinsi)</h3>
+                                <span class="text-xs bg-[#151D2A] text-[#D4AF37] px-2.5 py-1 rounded-md border border-[#233044]">Urut Terbesar</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">Klik salah satu baris untuk melihat detail tamu dari wilayah tersebut.</p>
+                            <div id="dashLocationList" class="space-y-3 pr-1"></div>
                         </div>
-                        <p class="text-xs text-slate-400 mb-4">Klik salah satu baris untuk melihat detail tamu dari wilayah tersebut.</p>
-                        <div id="dashLocationList" class="space-y-3 overflow-y-auto max-h-[350px] pr-1">
-                            <!-- Populated via JS -->
-                        </div>
+                        <!-- Dashboard Location Pagination -->
+                        <div id="dashLocationPagination" class="flex items-center justify-between pt-4 mt-4 border-t border-[#182234] text-xs"></div>
                     </div>
 
-                    <!-- Comset, Room Sold, ARR, Occ, Rev (B) -->
-                    <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm lg:col-span-2 flex flex-col">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-white text-base">Ringkasan Performa Komset vs Hotel Utama</h3>
-                            <span class="text-xs bg-[#114B3E]/40 text-[#D4AF37] font-semibold px-2.5 py-1 rounded-md border border-[#114B3E]">Analisis Pasar</span>
+                    <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm lg:col-span-2 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-bold text-white text-base">Ringkasan Performa Komset vs Hotel Utama</h3>
+                                <span class="text-xs bg-[#114B3E]/40 text-[#D4AF37] font-semibold px-2.5 py-1 rounded-md border border-[#114B3E]">Analisis Pasar</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse text-sm min-w-[550px]">
+                                    <thead>
+                                        <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                            <th class="p-3 font-semibold">Nama Hotel</th>
+                                            <th class="p-3 font-semibold text-center">Room Sold</th>
+                                            <th class="p-3 font-semibold text-right">ARR (Rp)</th>
+                                            <th class="p-3 font-semibold text-center">Occ (%)</th>
+                                            <th class="p-3 font-semibold text-right">Revenue (Rp)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashComsetTableBody" class="divide-y divide-[#182234]"></tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse text-sm min-w-[550px]">
-                                <thead>
-                                    <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
-                                        <th class="p-3 font-semibold">Nama Hotel</th>
-                                        <th class="p-3 font-semibold text-center">Room Sold</th>
-                                        <th class="p-3 font-semibold text-right">ARR (Rp)</th>
-                                        <th class="p-3 font-semibold text-center">Occ (%)</th>
-                                        <th class="p-3 font-semibold text-right">Revenue (Rp)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dashComsetTableBody" class="divide-y divide-[#182234]">
-                                    <!-- Populated via JS -->
-                                </tbody>
-                            </table>
-                        </div>
+                        <!-- Dashboard Comset Pagination -->
+                        <div id="dashComsetPagination" class="flex items-center justify-between pt-4 mt-4 border-t border-[#182234] text-xs"></div>
                     </div>
                 </div>
 
-                <!-- Detail Modal for City/Province Click -->
+                <!-- City Detail Modal -->
                 <div id="cityDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
                     <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
                         <div class="flex justify-between items-center border-b border-[#182234] pb-3">
@@ -260,15 +246,12 @@
                                         <th class="p-2 text-center">WhatsApp (Direct WA)</th>
                                     </tr>
                                 </thead>
-                                <tbody id="modalCityGuests" class="divide-y divide-[#182234]">
-                                    <!-- Populated -->
-                                </tbody>
+                                <tbody id="modalCityGuests" class="divide-y divide-[#182234]"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Upselling Comparison Modal -->
                 <div id="upsellChartModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
                     <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-3xl w-full p-6 shadow-2xl space-y-4">
                         <div class="flex justify-between items-center border-b border-[#182234] pb-3">
@@ -282,40 +265,41 @@
                 </div>
             </section>
 
-            <!-- ================= TAB 2: DATABASE TAMU & BLAST WA ================= -->
+            <!-- TAB 2: DATABASE TAMU & BLAST WA -->
             <section id="tab-database" class="tab-content hidden space-y-6">
-                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <h2 class="text-lg font-bold text-white">Database Tamu & WhatsApp Blast</h2>
-                            <p class="text-xs text-slate-400">Kelola informasi tamu dan kirimkan pesan broadcast WhatsApp interaktif.</p>
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Database Tamu & WhatsApp Blast</h2>
+                                <p class="text-xs text-slate-400">Kelola informasi tamu dan kirimkan pesan broadcast WhatsApp interaktif.</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                                <button onclick="openAddGuestModal()" class="flex-1 sm:flex-initial bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Tamu</button>
+                                <button onclick="openBlastModal()" class="flex-1 sm:flex-initial bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm"><i class="fa-brands fa-whatsapp mr-2"></i>Blast WhatsApp</button>
+                            </div>
                         </div>
-                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                            <button onclick="openAddGuestModal()" class="flex-1 sm:flex-initial bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Tamu</button>
-                            <button onclick="openBlastModal()" class="flex-1 sm:flex-initial bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm"><i class="fa-brands fa-whatsapp mr-2"></i>Blast WhatsApp</button>
-                        </div>
-                    </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm border-collapse min-w-[650px]">
-                            <thead>
-                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
-                                    <th class="p-3 font-semibold">Nama Tamu</th>
-                                    <th class="p-3 font-semibold">Tanggal Check-in</th>
-                                    <th class="p-3 font-semibold">Kota</th>
-                                    <th class="p-3 font-semibold">Provinsi</th>
-                                    <th class="p-3 font-semibold">No. WhatsApp</th>
-                                    <th class="p-3 font-semibold text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="guestTableBody" class="divide-y divide-[#182234]">
-                                <!-- Populated via JS -->
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm border-collapse min-w-[650px]">
+                                <thead>
+                                    <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                        <th class="p-3 font-semibold">Nama Tamu</th>
+                                        <th class="p-3 font-semibold">Tanggal Check-in</th>
+                                        <th class="p-3 font-semibold">Kota</th>
+                                        <th class="p-3 font-semibold">Provinsi</th>
+                                        <th class="p-3 font-semibold">No. WhatsApp</th>
+                                        <th class="p-3 font-semibold text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="guestTableBody" class="divide-y divide-[#182234]"></tbody>
+                            </table>
+                        </div>
                     </div>
+                    <!-- Guest Pagination Bar -->
+                    <div id="guestPagination" class="flex items-center justify-between pt-4 mt-4 border-t border-[#182234] text-xs"></div>
                 </div>
 
-                <!-- WhatsApp Blast Modal -->
                 <div id="blastModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
                     <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
                         <div class="flex justify-between items-center border-b border-[#182234] pb-3">
@@ -343,7 +327,6 @@
                     </div>
                 </div>
 
-                <!-- Add/Edit Guest Modal -->
                 <div id="guestModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
                     <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
                         <div class="flex justify-between items-center border-b border-[#182234] pb-3">
@@ -383,42 +366,43 @@
                 </div>
             </section>
 
-            <!-- ================= TAB 3: DATA COMSET & REVENUE ================= -->
+            <!-- TAB 3: DATA COMSET & REVENUE -->
             <section id="tab-comset" class="tab-content hidden space-y-6">
-                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <h2 class="text-lg font-bold text-white">Data Competitor Set & Revenue Performance</h2>
-                            <p class="text-xs text-slate-400">Monitor metrik pasar komparatif (MPI, RGI, ARI, Revenue, Market Share).</p>
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Data Competitor Set & Revenue Performance</h2>
+                                <p class="text-xs text-slate-400">Monitor metrik pasar komparatif (MPI, RGI, ARI, Revenue, Market Share).</p>
+                            </div>
+                            <button onclick="openComsetModel()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Data Comset</button>
                         </div>
-                        <button onclick="openComsetModel()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Data Comset</button>
-                    </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse min-w-[850px]">
-                            <thead>
-                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
-                                    <th class="p-2.5 font-semibold">Tanggal Data</th>
-                                    <th class="p-2.5 font-semibold">Hotel Utama / Komset</th>
-                                    <th class="p-2.5 font-semibold text-center">Room Avail</th>
-                                    <th class="p-2.5 font-semibold text-center">Room Sold</th>
-                                    <th class="p-2.5 font-semibold text-center">Occ (%)</th>
-                                    <th class="p-2.5 font-semibold text-right">ARR (Rp)</th>
-                                    <th class="p-2.5 font-semibold text-right">Revenue (Rp)</th>
-                                    <th class="p-2.5 font-semibold text-center">Mkt Share</th>
-                                    <th class="p-2.5 font-semibold text-center">RevPAR</th>
-                                    <th class="p-2.5 font-semibold text-center">MPI/RGI/ARI</th>
-                                    <th class="p-2.5 font-semibold text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="comgetTableFullBody" class="divide-y divide-[#182234]">
-                                <!-- Populated via JS -->
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs border-collapse min-w-[850px]">
+                                <thead>
+                                    <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                        <th class="p-2.5 font-semibold">Tanggal Data</th>
+                                        <th class="p-2.5 font-semibold">Hotel Utama / Komset</th>
+                                        <th class="p-2.5 font-semibold text-center">Room Avail</th>
+                                        <th class="p-2.5 font-semibold text-center">Room Sold</th>
+                                        <th class="p-2.5 font-semibold text-center">Occ (%)</th>
+                                        <th class="p-2.5 font-semibold text-right">ARR (Rp)</th>
+                                        <th class="p-2.5 font-semibold text-right">Revenue (Rp)</th>
+                                        <th class="p-2.5 font-semibold text-center">Mkt Share</th>
+                                        <th class="p-2.5 font-semibold text-center">RevPAR</th>
+                                        <th class="p-2.5 font-semibold text-center">MPI/RGI/ARI</th>
+                                        <th class="p-2.5 font-semibold text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="comgetTableFullBody" class="divide-y divide-[#182234]"></tbody>
+                            </table>
+                        </div>
                     </div>
+                    <!-- Comset Pagination Bar -->
+                    <div id="comsetPagination" class="flex items-center justify-between pt-4 mt-4 border-t border-[#182234] text-xs"></div>
                 </div>
 
-                <!-- Add/Edit Comset Modal -->
                 <div id="comsetModel" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
                     <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
                         <div class="flex justify-between items-center border-b border-[#182234] pb-3">
@@ -458,38 +442,39 @@
                 </div>
             </section>
 
-            <!-- ================= TAB 4: EXTEND BY DIRECT ================= -->
+            <!-- TAB 4: EXTEND BY DIRECT -->
             <section id="tab-extend" class="tab-content hidden space-y-6">
-                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <h2 class="text-lg font-bold text-white">Data Extend by Direct Booking</h2>
-                            <p class="text-xs text-slate-400">Daftar tamu yang memperpanjang masa menginap langsung melalui hotel.</p>
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Data Extend by Direct Booking</h2>
+                                <p class="text-xs text-slate-400">Daftar tamu yang memperpanjang masa menginap langsung melalui hotel.</p>
+                            </div>
+                            <button onclick="openExtendModal()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Data Extend</button>
                         </div>
-                        <button onclick="openExtendModal()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Data Extend</button>
-                    </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm border-collapse min-w-[700px]">
-                            <thead>
-                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
-                                    <th class="p-3 font-semibold">Nama Tamu</th>
-                                    <th class="p-3 font-semibold">No. Kamar</th>
-                                    <th class="p-3 font-semibold text-center">Jumlah Malam Ekstensi</th>
-                                    <th class="p-3 font-semibold">Tanggal Extend</th>
-                                    <th class="p-3 font-semibold text-right">Total Tambahan Revenue (Rp)</th>
-                                    <th class="p-3 font-semibold text-center">WhatsApp (Direct WA)</th>
-                                    <th class="p-3 font-semibold text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="extendTableBody" class="divide-y divide-[#182234]">
-                                <!-- Populated via JS -->
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm border-collapse min-w-[700px]">
+                                <thead>
+                                    <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                        <th class="p-3 font-semibold">Nama Tamu</th>
+                                        <th class="p-3 font-semibold">No. Kamar</th>
+                                        <th class="p-3 font-semibold text-center">Jumlah Malam Ekstensi</th>
+                                        <th class="p-3 font-semibold">Tanggal Extend</th>
+                                        <th class="p-3 font-semibold text-right">Total Tambahan Revenue (Rp)</th>
+                                        <th class="p-3 font-semibold text-center">WhatsApp (Direct WA)</th>
+                                        <th class="p-3 font-semibold text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="extendTableBody" class="divide-y divide-[#182234]"></tbody>
+                            </table>
+                        </div>
                     </div>
+                    <!-- Extend Pagination Bar -->
+                    <div id="extendPagination" class="flex items-center justify-between pt-4 mt-4 border-t border-[#182234] text-xs"></div>
                 </div>
 
-                <!-- Add/Edit Extend Modal -->
                 <div id="extendModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
                     <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
                         <div class="flex justify-between items-center border-b border-[#182234] pb-3">
@@ -535,36 +520,37 @@
                 </div>
             </section>
 
-            <!-- ================= TAB 5: REPEATER GUEST ================= -->
+            <!-- TAB 5: REPEATER GUEST -->
             <section id="tab-repeater" class="tab-content hidden space-y-6">
-                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <h2 class="text-lg font-bold text-white">Data Repeater Guest (Tamu Berulang)</h2>
-                            <p class="text-xs text-slate-400">Daftar tamu setia yang telah menginap lebih dari satu kali.</p>
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Data Repeater Guest (Tamu Berulang)</h2>
+                                <p class="text-xs text-slate-400">Daftar tamu setia yang telah menginap lebih dari satu kali.</p>
+                            </div>
+                            <button onclick="openRepeaterModal()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Repeater Guest</button>
                         </div>
-                        <button onclick="openRepeaterModal()" class="w-full sm:w-auto bg-[#114B3E] hover:bg-[#155C4E] text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-2"></i>Tambah Repeater Guest</button>
-                    </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm border-collapse min-w-[650px]">
-                            <thead>
-                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
-                                    <th class="p-3 font-semibold">Nama Tamu</th>
-                                    <th class="p-3 font-semibold text-center">Total Kunjungan (Stay Count)</th>
-                                    <th class="p-3 font-semibold">Kunjungan Terakhir</th>
-                                    <th class="p-3 font-semibold text-center">WhatsApp (Direct WA)</th>
-                                    <th class="p-3 font-semibold text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="repeaterTableBody" class="divide-y divide-[#182234]">
-                                <!-- Populated via JS -->
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm border-collapse min-w-[650px]">
+                                <thead>
+                                    <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                        <th class="p-3 font-semibold">Nama Tamu</th>
+                                        <th class="p-3 font-semibold text-center">Total Kunjungan (Stay Count)</th>
+                                        <th class="p-3 font-semibold">Kunjungan Terakhir</th>
+                                        <th class="p-3 font-semibold text-center">WhatsApp (Direct WA)</th>
+                                        <th class="p-3 font-semibold text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="repeaterTableBody" class="divide-y divide-[#182234]"></tbody>
+                            </table>
+                        </div>
                     </div>
+                    <!-- Repeater Pagination Bar -->
+                    <div id="repeaterPagination" class="flex items-center justify-between pt-4 mt-4 border-t border-[#182234] text-xs"></div>
                 </div>
 
-                <!-- Add/Edit Repeater Modal -->
                 <div id="repeaterModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
                     <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
                         <div class="flex justify-between items-center border-b border-[#182234] pb-3">
@@ -600,68 +586,69 @@
                 </div>
             </section>
 
-            <!-- ================= TAB 6: UPSELLING & CROSS-SELLING ================= -->
+            <!-- TAB 6: UPSELLING & CROSS-SELLING -->
             <section id="tab-upselling" class="tab-content hidden space-y-6">
-                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6">
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                        <div>
-                            <h2 class="text-lg font-bold text-white">Data Upselling & Cross-Selling</h2>
-                            <p class="text-xs text-slate-400">Monitor layanan tambahan dengan filter MTD / YTD.</p>
-                        </div>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <div class="inline-flex bg-[#151D2A] p-1 rounded-xl border border-[#233044]">
-                                <button id="btnUpsellMtd" onclick="setUpsellFilterMode('mtd')" class="px-3 py-1 rounded-lg text-xs font-bold transition bg-[#114B3E] text-[#D4AF37]">MTD</button>
-                                <button id="btnUpsellYtd" onclick="setUpsellFilterMode('ytd')" class="px-3 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">YTD</button>
+                <div class="bg-[#0E1420] p-5 sm:p-6 rounded-2xl border border-[#182234] shadow-sm space-y-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Data Upselling & Cross-Selling</h2>
+                                <p class="text-xs text-slate-400">Monitor layanan tambahan dengan filter MTD / YTD.</p>
                             </div>
-                            <select id="upsellFilterMonth" onchange="renderUpsellTable()" class="bg-[#151D2A] border border-[#233044] text-slate-200 text-xs rounded-xl px-2.5 py-2 outline-none">
-                                <option value="0">Jan</option>
-                                <option value="1">Feb</option>
-                                <option value="2">Mar</option>
-                                <option value="3" selected>Apr</option>
-                                <option value="4">Mei</option>
-                                <option value="5">Jun</option>
-                                <option value="6">Jul</option>
-                                <option value="7">Ags</option>
-                                <option value="8">Sep</option>
-                                <option value="9">Okt</option>
-                                <option value="10">Nov</option>
-                                <option value="11">Des</option>
-                            </select>
-                            <select id="upsellFilterYear" onchange="renderUpsellTable()" class="bg-[#151D2A] border border-[#233044] text-slate-200 text-xs rounded-xl px-2.5 py-2 outline-none">
-                                <option value="2025">2025</option>
-                                <option value="2026" selected>2026</option>
-                                <option value="2027">2027</option>
-                            </select>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <div class="inline-flex bg-[#151D2A] p-1 rounded-xl border border-[#233044]">
+                                    <button id="btnUpsellMtd" onclick="setUpsellFilterMode('mtd')" class="px-3 py-1 rounded-lg text-xs font-bold transition bg-[#114B3E] text-[#D4AF37]">MTD</button>
+                                    <button id="btnUpsellYtd" onclick="setUpsellFilterMode('ytd')" class="px-3 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">YTD</button>
+                                </div>
+                                <select id="upsellFilterMonth" onchange="renderUpsellTable()" class="bg-[#151D2A] border border-[#233044] text-slate-200 text-xs rounded-xl px-2.5 py-2 outline-none">
+                                    <option value="0">Jan</option>
+                                    <option value="1">Feb</option>
+                                    <option value="2">Mar</option>
+                                    <option value="3" selected>Apr</option>
+                                    <option value="4">Mei</option>
+                                    <option value="5">Jun</option>
+                                    <option value="6">Jul</option>
+                                    <option value="7">Ags</option>
+                                    <option value="8">Sep</option>
+                                    <option value="9">Okt</option>
+                                    <option value="10">Nov</option>
+                                    <option value="11">Des</option>
+                                </select>
+                                <select id="upsellFilterYear" onchange="renderUpsellTable()" class="bg-[#151D2A] border border-[#233044] text-slate-200 text-xs rounded-xl px-2.5 py-2 outline-none">
+                                    <option value="2025">2025</option>
+                                    <option value="2026" selected>2026</option>
+                                    <option value="2027">2027</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                            <p class="text-xs text-slate-400">Klik tombol "Tamu" pada baris layanan untuk melihat daftar transaksi dan melakukan edit atau chat WhatsApp.</p>
+                            <div class="flex items-center space-x-2 w-full sm:w-auto">
+                                <button onclick="openUpsellChartModal()" class="flex-1 sm:flex-initial bg-[#1A365D] hover:bg-[#224479] text-white px-3.5 py-2 rounded-xl text-xs font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-chart-bar mr-1.5"></i>Grafik YoY</button>
+                                <button onclick="openUpsellModal()" class="flex-1 sm:flex-initial bg-[#114B3E] hover:bg-[#155C4E] text-white px-3.5 py-2 rounded-xl text-xs font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-1.5"></i>Tambah Transaksi</button>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm border-collapse min-w-[600px]">
+                                <thead>
+                                    <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
+                                        <th class="p-3 font-semibold">Jenis Layanan</th>
+                                        <th class="p-3 font-semibold text-center">Total Qty Terjual</th>
+                                        <th class="p-3 font-semibold text-right">Total Revenue (Rp)</th>
+                                        <th class="p-3 font-semibold text-center">Detail Tamu</th>
+                                        <th class="p-3 font-semibold text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="upsellTableBody" class="divide-y divide-[#182234]"></tbody>
+                            </table>
                         </div>
                     </div>
-
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                        <p class="text-xs text-slate-400">Klik tombol "Tamu" pada baris layanan untuk melihat daftar transaksi dan melakukan edit atau chat WhatsApp.</p>
-                        <div class="flex items-center space-x-2 w-full sm:w-auto">
-                            <button onclick="openUpsellChartModal()" class="flex-1 sm:flex-initial bg-[#1A365D] hover:bg-[#224479] text-white px-3.5 py-2 rounded-xl text-xs font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-chart-bar mr-1.5"></i>Grafik YoY</button>
-                            <button onclick="openUpsellModal()" class="flex-1 sm:flex-initial bg-[#114B3E] hover:bg-[#155C4E] text-white px-3.5 py-2 rounded-xl text-xs font-medium transition shadow-sm border border-[#D4AF37]/30"><i class="fa-solid fa-plus mr-1.5"></i>Tambah Transaksi</button>
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm border-collapse min-w-[600px]">
-                            <thead>
-                                <tr class="bg-[#151D2A] text-slate-300 border-b border-[#233044]">
-                                    <th class="p-3 font-semibold">Jenis Layanan</th>
-                                    <th class="p-3 font-semibold text-center">Total Qty Terjual</th>
-                                    <th class="p-3 font-semibold text-right">Total Revenue (Rp)</th>
-                                    <th class="p-3 font-semibold text-center">Detail Tamu</th>
-                                    <th class="p-3 font-semibold text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="upsellTableBody" class="divide-y divide-[#182234]">
-                                <!-- Populated via JS -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <!-- Upsell Pagination Bar -->
+                    <div id="upsellPagination" class="flex items-center justify-between pt-4 mt-4 border-t border-[#182234] text-xs"></div>
                 </div>
 
-                <!-- Modal Detail Tamu Upselling per Layanan -->
                 <div id="upsellDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
                     <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
                         <div class="flex justify-between items-center border-b border-[#182234] pb-3">
@@ -679,15 +666,12 @@
                                         <th class="p-2 text-center">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="modalUpsellGuestsBody" class="divide-y divide-[#182234]">
-                                    <!-- Populated -->
-                                </tbody>
+                                <tbody id="modalUpsellGuestsBody" class="divide-y divide-[#182234]"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Add/Edit Upsell Modal -->
                 <div id="upsellModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
                     <div class="bg-[#0E1420] border border-[#233044] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
                         <div class="flex justify-between items-center border-b border-[#182234] pb-3">
@@ -739,7 +723,7 @@
                 </div>
             </section>
 
-            <!-- ================= TAB 7: PENGATURAN HOTEL ================= -->
+            <!-- TAB 7: PENGATURAN HOTEL -->
             <section id="tab-settings" class="tab-content hidden space-y-6">
                 <div class="bg-[#0E1420] p-6 md:p-8 rounded-2xl border border-[#182234] shadow-sm max-w-2xl mx-auto space-y-6">
                     <div>
@@ -748,10 +732,8 @@
                     </div>
 
                     <div class="space-y-4">
-                        <!-- Hidden GAS URL Input -->
                         <div class="hidden">
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Google Apps Script Web App URL</label>
-                            <input type="text" id="settingGasUrl" class="w-full bg-[#151D2A] border border-[#233044] text-slate-200 rounded-xl px-3 py-2.5 text-sm outline-none" value="https://script.google.com/macros/s/AKfycbywoFRg73YXbXdLUG-EebXO0jVQBHL2uOIp_YFUYNzaKFy7TTypa2Eu8iYdXYDQiiAKZw/exec">
+                            <input type="text" id="settingGasUrl" value="https://script.google.com/macros/s/AKfycbywoFRg73YXbXdLUG-EebXO0jVQBHL2uOIp_YFUYNzaKFy7TTypa2Eu8iYdXYDQiiAKZw/exec">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Hotel</label>
@@ -785,6 +767,16 @@
     <script>
         let currentFilterMode = 'mtd'; 
         let upsellFilterMode = 'mtd';  
+
+        // Pagination State (Changed page size to 50 items per page)
+        const pageSize = 50;
+        let dashLocPage = 1;
+        let dashComsetPage = 1;
+        let guestPage = 1;
+        let comsetPage = 1;
+        let extendPage = 1;
+        let repeaterPage = 1;
+        let upsellPage = 1;
 
         let hotelConfig = {
             name: "Hotel Grand Santhi",
@@ -836,7 +828,6 @@
         let upsellChartInstance = null;
         let currentOpenService = null;
 
-        // --- Mobile Slide Drawer Interactive Controller ---
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('appSidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
@@ -857,7 +848,6 @@
             }
         }
 
-        // --- Google Sheets Sync Communication ---
         async function syncToGoogleSheets(action, payload) {
             const url = hotelConfig.gasUrl.trim();
             if (!url) return;
@@ -924,9 +914,10 @@
             }
         }
 
-        // --- Filter Mode Handlers ---
         function setFilterMode(mode) {
             currentFilterMode = mode;
+            dashLocPage = 1;
+            dashComsetPage = 1;
             const btnMtd = document.getElementById('btnModeMtd');
             const btnYtd = document.getElementById('btnModeYtd');
             const containerMtd = document.getElementById('containerMtd');
@@ -945,6 +936,7 @@
 
         function setUpsellFilterMode(mode) {
             upsellFilterMode = mode;
+            upsellPage = 1;
             const btnM = document.getElementById('btnUpsellMtd');
             const btnY = document.getElementById('btnUpsellYtd');
             const selM = document.getElementById('upsellFilterMonth');
@@ -961,7 +953,6 @@
             renderUpsellTable();
         }
 
-        // --- Navigation Controller ---
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -1000,7 +991,8 @@
             return "Rp " + Number(val).toLocaleString('id-ID');
         }
 
-        // --- DASHBOARD RENDERER ---
+        // --- RENDERERS WITH PAGINATION ---
+
         function renderDashboard() {
             const m = document.getElementById('filterMonth').value;
             const y = document.getElementById('filterYear').value;
@@ -1058,6 +1050,7 @@
             document.getElementById('dashOcc').innerText = hotelOcc + "%";
             document.getElementById('dashUpsellRevenue').innerText = formatIDR(totalUpsellRev);
 
+            // Locations pagination logic
             const locationMap = {};
             filteredGuests.forEach(g => {
                 const key = `${g.city}, ${g.prov}`;
@@ -1067,13 +1060,17 @@
             });
 
             const sortedLocations = Object.values(locationMap).sort((a, b) => b.count - a.count);
+            const totalLocPages = Math.ceil(sortedLocations.length / pageSize) || 1;
+            if (dashLocPage > totalLocPages) dashLocPage = totalLocPages;
+            const paginatedLocs = sortedLocations.slice((dashLocPage - 1) * pageSize, dashLocPage * pageSize);
+
             const locContainer = document.getElementById('dashLocationList');
             locContainer.innerHTML = '';
 
-            if (sortedLocations.length === 0) {
+            if (paginatedLocs.length === 0) {
                 locContainer.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">Tidak ada data tamu pada periode ini.</p>`;
             } else {
-                sortedLocations.forEach(loc => {
+                paginatedLocs.forEach(loc => {
                     locContainer.innerHTML += `
                         <div onclick="showCityGuests('${loc.city}', '${loc.prov}')" class="p-3 bg-[#151D2A] hover:bg-[#1C273B] border border-[#233044] rounded-xl cursor-pointer transition flex items-center justify-between">
                             <div>
@@ -1086,12 +1083,26 @@
                 });
             }
 
+            // Dash location pagination bar
+            document.getElementById('dashLocationPagination').innerHTML = `
+                <span class="text-slate-400">Hal ${dashLocPage} dari ${totalLocPages}</span>
+                <div class="space-x-1">
+                    <button onclick="changeDashLocPage(-1)" ${dashLocPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-2.5 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-2.5 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Prev</button>
+                    <button onclick="changeDashLocPage(1)" ${dashLocPage >= totalLocPages ? 'disabled class="opacity-40 cursor-not-allowed px-2.5 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-2.5 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Next</button>
+                </div>
+            `;
+
+            // Dashboard Comset table pagination logic
+            const totalComsetPages = Math.ceil(filteredComset.length / pageSize) || 1;
+            if (dashComsetPage > totalComsetPages) dashComsetPage = totalComsetPages;
+            const paginatedComsets = filteredComset.slice((dashComsetPage - 1) * pageSize, dashComsetPage * pageSize);
+
             const comtbody = document.getElementById('dashComsetTableBody');
             comtbody.innerHTML = '';
-            if (filteredComset.length === 0) {
+            if (paginatedComsets.length === 0) {
                 comtbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Tidak ada data comset pada periode ini.</td></tr>`;
             } else {
-                filteredComset.forEach(item => {
+                paginatedComsets.forEach(item => {
                     const occ = item.avail > 0 ? Math.round((item.sold / item.avail) * 100) : 0;
                     const rev = item.sold * item.arr;
                     comtbody.innerHTML += `
@@ -1105,6 +1116,24 @@
                     `;
                 });
             }
+
+            document.getElementById('dashComsetPagination').innerHTML = `
+                <span class="text-slate-400">Hal ${dashComsetPage} dari ${totalComsetPages}</span>
+                <div class="space-x-1">
+                    <button onclick="changeDashComsetPage(-1)" ${dashComsetPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-2.5 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-2.5 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Prev</button>
+                    <button onclick="changeDashComsetPage(1)" ${dashComsetPage >= totalComsetPages ? 'disabled class="opacity-40 cursor-not-allowed px-2.5 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-2.5 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Next</button>
+                </div>
+            `;
+        }
+
+        function changeDashLocPage(dir) {
+            dashLocPage += dir;
+            renderDashboard();
+        }
+
+        function changeDashComsetPage(dir) {
+            dashComsetPage += dir;
+            renderDashboard();
         }
 
         function showCityGuests(city, prov) {
@@ -1155,11 +1184,16 @@
             document.getElementById('cityDetailModal').classList.remove('flex');
         }
 
-        // --- DATABASE & BLAST WA ---
+        // --- GUEST TABLE PAGINATION ---
         function renderGuestTable() {
+            const totalPages = Math.ceil(guestsData.length / pageSize) || 1;
+            if (guestPage > totalPages) guestPage = totalPages;
+            const paginatedGuests = guestsData.slice((guestPage - 1) * pageSize, guestPage * pageSize);
+
             const tbody = document.getElementById('guestTableBody');
             tbody.innerHTML = '';
-            guestsData.forEach((g, index) => {
+            paginatedGuests.forEach((g, idx) => {
+                const globalIndex = (guestPage - 1) * pageSize + idx;
                 tbody.innerHTML += `
                     <tr class="hover:bg-[#151D2A]/50 border-b border-[#182234]">
                         <td class="p-3 font-semibold text-slate-200">${g.name}</td>
@@ -1168,12 +1202,25 @@
                         <td class="p-3 text-slate-400">${g.prov}</td>
                         <td class="p-3 text-slate-300 font-medium"><i class="fa-brands fa-whatsapp text-emerald-400 mr-1.5"></i>${g.phone || '-'}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button onclick="editGuest(${index})" class="text-[#D4AF37] hover:text-white text-xs font-semibold px-2 py-1 bg-[#151D2A] border border-[#233044] rounded-lg"><i class="fa-solid fa-pen"></i> Edit</button>
-                            <button onclick="deleteGuest(${index})" class="text-rose-400 hover:text-rose-300 text-xs font-semibold px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="editGuest(${globalIndex})" class="text-[#D4AF37] hover:text-white text-xs font-semibold px-2 py-1 bg-[#151D2A] border border-[#233044] rounded-lg"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button onclick="deleteGuest(${globalIndex})" class="text-rose-400 hover:text-rose-300 text-xs font-semibold px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded-lg"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
+
+            document.getElementById('guestPagination').innerHTML = `
+                <span class="text-slate-400">Menampilkan halaman ${guestPage} dari ${totalPages} (Total ${guestsData.length} tamu)</span>
+                <div class="space-x-1">
+                    <button onclick="changeGuestPage(-1)" ${guestPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Prev</button>
+                    <button onclick="changeGuestPage(1)" ${guestPage >= totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Next</button>
+                </div>
+            `;
+        }
+
+        function changeGuestPage(dir) {
+            guestPage += dir;
+            renderGuestTable();
         }
 
         function openAddGuestModal() {
@@ -1273,8 +1320,12 @@
             alert(`Berhasil memproses WhatsApp Blast ke ${count} nomor tamu.`);
         }
 
-        // --- COMSET RENDERER ---
+        // --- COMSET FULL TABLE PAGINATION ---
         function renderComsetFullTable() {
+            const totalPages = Math.ceil(comsetData.length / pageSize) || 1;
+            if (comsetPage > totalPages) comsetPage = totalPages;
+            const paginatedComset = comsetData.slice((comsetPage - 1) * pageSize, comsetPage * pageSize);
+
             const tbody = document.getElementById('comgetTableFullBody');
             tbody.innerHTML = '';
             const totalAvail = comsetData.reduce((a, b) => a + Number(b.avail), 0);
@@ -1283,7 +1334,8 @@
             const avgArr = comsetData.reduce((a, b) => a + Number(b.arr), 0) / (comsetData.length || 1);
             const avgRevpar = comsetData.reduce((a, b) => a + ((Number(b.sold) * Number(b.arr)) / (Number(b.avail) || 1)), 0) / (comsetData.length || 1);
 
-            comsetData.forEach((item, index) => {
+            paginatedComset.forEach((item, idx) => {
+                const globalIndex = (comsetPage - 1) * pageSize + idx;
                 const occ = Number(item.sold) / (Number(item.avail) || 1);
                 const rev = Number(item.sold) * Number(item.arr);
                 const mktShare = Number(item.avail) / (totalAvail || 1);
@@ -1305,12 +1357,25 @@
                         <td class="p-2.5 text-center text-slate-300">${formatIDR(Math.round(revpar))}</td>
                         <td class="p-2.5 text-center font-semibold text-[#D4AF37]">${mpi} / ${rgi} / ${ari}</td>
                         <td class="p-2.5 text-center space-x-1">
-                            <button onclick="editComset(${index})" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteComset(${index})" class="text-rose-400 text-xs px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="editComset(${globalIndex})" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteComset(${globalIndex})" class="text-rose-400 text-xs px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
+
+            document.getElementById('comsetPagination').innerHTML = `
+                <span class="text-slate-400">Menampilkan halaman ${comsetPage} dari ${totalPages} (Total ${comsetData.length} data)</span>
+                <div class="space-x-1">
+                    <button onclick="changeComsetPage(-1)" ${comsetPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Prev</button>
+                    <button onclick="changeComsetPage(1)" ${comsetPage >= totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Next</button>
+                </div>
+            `;
+        }
+
+        function changeComsetPage(dir) {
+            comsetPage += dir;
+            renderComsetFullTable();
         }
 
         function openComsetModel() {
@@ -1379,11 +1444,16 @@
             }
         }
 
-        // --- EXTEND BY DIRECT RENDERER ---
+        // --- EXTEND TABLE PAGINATION ---
         function renderExtendTable() {
+            const totalPages = Math.ceil(extendData.length / pageSize) || 1;
+            if (extendPage > totalPages) extendPage = totalPages;
+            const paginatedExtend = extendData.slice((extendPage - 1) * pageSize, extendPage * pageSize);
+
             const tbody = document.getElementById('extendTableBody');
             tbody.innerHTML = '';
-            extendData.forEach((item, index) => {
+            paginatedExtend.forEach((item, idx) => {
+                const globalIndex = (extendPage - 1) * pageSize + idx;
                 const cleanPhone = String(item.phone || "").replace(/\D/g, '');
                 const waText = encodeURIComponent(`Halo ${item.name}, terima kasih telah memperpanjang masa menginap di Kamar ${item.room} Hotel Grand Santhi.`);
                 const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waText}` : "#";
@@ -1402,12 +1472,25 @@
                             </a>
                         </td>
                         <td class="p-3 text-center space-x-2">
-                            <button onclick="editExtend(${index})" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i> Edit</button>
-                            <button onclick="deleteExtend(${index})" class="text-rose-400 text-xs px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="editExtend(${globalIndex})" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button onclick="deleteExtend(${globalIndex})" class="text-rose-400 text-xs px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
+
+            document.getElementById('extendPagination').innerHTML = `
+                <span class="text-slate-400">Menampilkan halaman ${extendPage} dari ${totalPages} (Total ${extendData.length} data)</span>
+                <div class="space-x-1">
+                    <button onclick="changeExtendPage(-1)" ${extendPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Prev</button>
+                    <button onclick="changeExtendPage(1)" ${extendPage >= totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Next</button>
+                </div>
+            `;
+        }
+
+        function changeExtendPage(dir) {
+            extendPage += dir;
+            renderExtendTable();
         }
 
         function openExtendModal() {
@@ -1469,11 +1552,16 @@
             syncToGoogleSheets('deleteExtend', item);
         }
 
-        // --- REPEATER GUEST RENDERER ---
+        // --- REPEATER TABLE PAGINATION ---
         function renderRepeaterTable() {
+            const totalPages = Math.ceil(repeaterGuestsData.length / pageSize) || 1;
+            if (repeaterPage > totalPages) repeaterPage = totalPages;
+            const paginatedRepeater = repeaterGuestsData.slice((repeaterPage - 1) * pageSize, repeaterPage * pageSize);
+
             const tbody = document.getElementById('repeaterTableBody');
             tbody.innerHTML = '';
-            repeaterGuestsData.forEach((item, index) => {
+            paginatedRepeater.forEach((item, idx) => {
+                const globalIndex = (repeaterPage - 1) * pageSize + idx;
                 const cleanPhone = String(item.phone || "").replace(/\D/g, '');
                 const waText = encodeURIComponent(`Halo ${item.name}, selamat datang kembali di ${hotelConfig.name}! Terima kasih atas kesetiaan Anda.`);
                 const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waText}` : "#";
@@ -1490,12 +1578,25 @@
                             </a>
                         </td>
                         <td class="p-3 text-center space-x-2">
-                            <button onclick="editRepeater(${index})" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i> Edit</button>
-                            <button onclick="deleteRepeater(${index})" class="text-rose-400 text-xs px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="editRepeater(${globalIndex})" class="text-[#D4AF37] text-xs px-2 py-1 bg-[#151D2A] border border-[#233044] rounded"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button onclick="deleteRepeater(${globalIndex})" class="text-rose-400 text-xs px-2 py-1 bg-rose-950/40 border border-rose-900/50 rounded"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
+
+            document.getElementById('repeaterPagination').innerHTML = `
+                <span class="text-slate-400">Menampilkan halaman ${repeaterPage} dari ${totalPages} (Total ${repeaterGuestsData.length} data)</span>
+                <div class="space-x-1">
+                    <button onclick="changeRepeaterPage(-1)" ${repeaterPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Prev</button>
+                    <button onclick="changeRepeaterPage(1)" ${repeaterPage >= totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Next</button>
+                </div>
+            `;
+        }
+
+        function changeRepeaterPage(dir) {
+            repeaterPage += dir;
+            renderRepeaterTable();
         }
 
         function openRepeaterModal() {
@@ -1551,7 +1652,7 @@
             syncToGoogleSheets('deleteRepeater', item);
         }
 
-        // --- UPSELLING & CROSS-SELLING RENDERER ---
+        // --- UPSELL TABLE PAGINATION ---
         function renderUpsellTable() {
             const m = document.getElementById('upsellFilterMonth').value;
             const y = document.getElementById('upsellFilterYear').value;
@@ -1575,16 +1676,21 @@
                 serviceMap[t.service].guests.push(t);
             });
 
+            const servicesList = Object.values(serviceMap);
+            const totalPages = Math.ceil(servicesList.length / pageSize) || 1;
+            if (upsellPage > totalPages) upsellPage = totalPages;
+            const paginatedServices = servicesList.slice((upsellPage - 1) * pageSize, upsellPage * pageSize);
+
             const tbody = document.getElementById('upsellTableBody');
             tbody.innerHTML = '';
 
-            const servicesList = Object.values(serviceMap);
             if (servicesList.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 text-xs">Tidak ada data transaksi upselling pada periode ini.</td></tr>`;
+                document.getElementById('upsellPagination').innerHTML = ``;
                 return;
             }
 
-            servicesList.forEach(item => {
+            paginatedServices.forEach(item => {
                 tbody.innerHTML += `
                     <tr class="hover:bg-[#151D2A]/50 border-b border-[#182234]">
                         <td class="p-3 font-bold text-white">${item.service}</td>
@@ -1601,6 +1707,19 @@
                     </tr>
                 `;
             });
+
+            document.getElementById('upsellPagination').innerHTML = `
+                <span class="text-slate-400">Menampilkan halaman ${upsellPage} dari ${totalPages} (Total ${servicesList.length} layanan)</span>
+                <div class="space-x-1">
+                    <button onclick="changeUpsellPage(-1)" ${upsellPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Prev</button>
+                    <button onclick="changeUpsellPage(1)" ${upsellPage >= totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-3 py-1 bg-[#151D2A] rounded border border-[#233044]"' : 'class="px-3 py-1 bg-[#151D2A] hover:bg-[#233044] rounded border border-[#233044] text-slate-200"'}>Next</button>
+                </div>
+            `;
+        }
+
+        function changeUpsellPage(dir) {
+            upsellPage += dir;
+            renderUpsellTable();
         }
 
         function showUpsellDetail(serviceName) {
@@ -1787,7 +1906,6 @@
             document.getElementById('upsellChartModal').classList.remove('flex');
         }
 
-        // --- HOTEL SETTINGS ---
         function saveHotelSettings() {
             hotelConfig.name = document.getElementById('settingHotelName').value;
             hotelConfig.address = document.getElementById('settingHotelAddress').value;
@@ -1813,7 +1931,6 @@
             }
         }
 
-        // Initial load & automatic background sync attempt
         window.onload = function() {
             renderDashboard();
             renderUpsellTable();
