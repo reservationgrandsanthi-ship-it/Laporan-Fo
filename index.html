@@ -1015,13 +1015,37 @@
                 }
             });
 
-            const filteredComset = comsetData.filter(c => {
+            // For Comset MTD/YTD recap: group by hotel name and sum up/average appropriately
+            const rawComsetFiltered = comsetData.filter(c => {
                 const d = new Date(c.date);
                 if (currentFilterMode === 'mtd') {
                     return d.getMonth() == m && d.getFullYear() == y;
                 } else {
                     return d.getFullYear() == y;
                 }
+            });
+
+            // Aggregate Comset data by hotel name for the selected period
+            const comsetMap = {};
+            rawComsetFiltered.forEach(item => {
+                const name = item.name;
+                if (!comsetMap[name]) {
+                    comsetMap[name] = { name: name, avail: 0, sold: 0, totalArrWeighted: 0, count: 0 };
+                }
+                comsetMap[name].avail += Number(item.avail) || 0;
+                comsetMap[name].sold += Number(item.sold) || 0;
+                comsetMap[name].totalArrWeighted += (Number(item.arr) || 0) * (Number(item.sold) || 0);
+                comsetMap[name].count += 1;
+            });
+
+            const aggregatedComset = Object.values(comsetMap).map(item => {
+                const avgArr = item.sold > 0 ? Math.round(item.totalArrWeighted / item.sold) : 0;
+                return {
+                    name: item.name,
+                    avail: item.avail,
+                    sold: item.sold,
+                    arr: avgArr
+                };
             });
 
             const filteredUpsell = upsellingTransactions.filter(u => {
@@ -1033,15 +1057,15 @@
                 }
             });
 
-            const hotelUtamaItems = filteredComset.filter(c => c.name.toLowerCase().includes("utama") || c.name.toLowerCase().includes("santhi"));
+            const hotelUtamaItems = aggregatedComset.filter(c => c.name.toLowerCase().includes("utama") || c.name.toLowerCase().includes("santhi"));
             
             let totalRev = 0;
             if (hotelUtamaItems.length > 0) {
                 hotelUtamaItems.forEach(item => {
                     totalRev += (Number(item.sold) || 0) * (Number(item.arr) || 0);
                 });
-            } else if (filteredComset.length > 0) {
-                const fallbackItem = filteredComset[0];
+            } else if (aggregatedComset.length > 0) {
+                const fallbackItem = aggregatedComset[0];
                 totalRev = (Number(fallbackItem.sold) || 0) * (Number(fallbackItem.arr) || 0);
             }
 
@@ -1092,9 +1116,9 @@
                 </div>
             `;
 
-            const totalComsetPages = Math.ceil(filteredComset.length / pageSize) || 1;
+            const totalComsetPages = Math.ceil(aggregatedComset.length / pageSize) || 1;
             if (dashComsetPage > totalComsetPages) dashComsetPage = totalComsetPages;
-            const paginatedComsets = filteredComset.slice((dashComsetPage - 1) * pageSize, dashComsetPage * pageSize);
+            const paginatedComsets = aggregatedComset.slice((dashComsetPage - 1) * pageSize, dashComsetPage * pageSize);
 
             const comtbody = document.getElementById('dashComsetTableBody');
             comtbody.innerHTML = '';
@@ -1107,7 +1131,7 @@
                     comtbody.innerHTML += `
                         <tr class="hover:bg-[#151D2A]/50 border-b border-[#182234]">
                             <td class="p-3 font-semibold text-slate-200">${item.name}</td>
-                            <td class="p-3 text-center text-slate-300">${item.sold} / ${item.avail}</td>
+                            <td class="p-3 text-center text-slate-300">${item.sold.toLocaleString('id-ID')} / ${item.avail.toLocaleString('id-ID')}</td>
                             <td class="p-3 text-right text-slate-300">${formatIDR(item.arr)}</td>
                             <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-semibold ${occ >= 70 ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-900/50' : 'bg-amber-950/60 text-amber-400 border border-amber-900/50'}">${occ}%</span></td>
                             <td class="p-3 text-right font-semibold text-white">${formatIDR(rev)}</td>
